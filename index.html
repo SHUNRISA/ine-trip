@@ -4,67 +4,162 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>伊根 亀島の男旅</title>
-    <link rel="manifest" href="manifest.json">
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.css">
-    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.js"></script>
+    <script>
+        tailwind.config = {
+            theme: { extend: { colors: { primary: '#2C5F2D', secondary: '#D4A574', accent: '#E85D75', warning: '#FF9800' } } }
+        }
+    </script>
     <style>
-        body { background-color: #2C5F2D; color: #FFE4B5; font-family: 'Hiragino Mincho ProN', serif; }
-        .card { background-color: rgba(255, 255, 255, 0.1); backdrop-filter: blur(5px); border: 1px solid rgba(255, 228, 181, 0.3); }
-        .fc { background: white; color: black; padding: 10px; border-radius: 8px; }
+        body { -webkit-tap-highlight-color: transparent; }
+        .active-tab { border-bottom: 4px solid white; opacity: 1 !important; }
+        .active-nav { color: #2C5F2D; font-weight: bold; }
+        .hidden-page { display: none; }
+        .splash-screen {
+            background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.7)), url('https://images.unsplash.com/photo-1590559063737-01e448404a7c?auto=format&fit=crop&w=1000');
+            background-size: cover; background-position: center;
+        }
     </style>
 </head>
-<body class="p-4">
-    <header class="text-center mb-8">
-        <h1 class="text-3xl font-bold mb-2">伊根 亀島の男旅</h1>
-        <p class="text-sm opacity-80">〜静かな海と歴史を巡る〜</p>
-    </header>
+<body class="bg-gray-100">
 
-    <div class="card p-6 rounded-2xl mb-6">
-        <h2 class="text-xl mb-4 flex items-center">📅 旅程カレンダー</h2>
-        <div id="calendar"></div>
+    <div id="splash" class="fixed inset-0 splash-screen flex flex-col items-center justify-center text-white z-50 transition-opacity duration-500">
+        <div class="text-center px-6">
+            <h1 class="text-4xl font-bold mb-2">伊根</h1>
+            <h2 class="text-3xl font-bold mb-8">亀島の男旅</h2>
+            <div class="bg-white/10 p-6 rounded-xl mb-8 backdrop-blur-md">
+                <p class="text-sm mb-2 opacity-80">出発日を選択</p>
+                <input type="date" id="startDate" class="w-full p-3 rounded text-gray-900 text-center font-bold">
+            </div>
+            <button id="startBtn" class="w-full bg-accent py-4 px-12 rounded-lg font-bold text-xl shadow-xl active:scale-95 transition-transform">
+                旅程を見る
+            </button>
+        </div>
     </div>
 
-    <div id="itinerary-details" class="card p-6 rounded-2xl hidden">
-        <h2 id="selected-date" class="text-xl mb-4 border-b border-orange-200 pb-2"></h2>
-        <div id="details-content" class="space-y-4"></div>
-        <button onclick="closeDetails()" class="mt-6 w-full py-2 bg-orange-700 text-white rounded-lg">閉じる</button>
+    <div id="app" class="hidden pb-20">
+        <header class="bg-primary text-white sticky top-0 z-40 shadow-md">
+            <div class="px-4 py-4 flex justify-between items-center">
+                <div>
+                    <div id="displayDate" class="text-xs opacity-80">2024年2月15日</div>
+                    <div id="pageTitle" class="text-xl font-bold">今日の予定</div>
+                </div>
+            </div>
+            <div id="dayTabs" class="flex border-t border-white/20">
+                <button onclick="switchDay(1)" id="tabDay1" class="flex-1 py-3 opacity-60 active-tab">Day 1</button>
+                <button onclick="switchDay(2)" id="tabDay2" class="flex-1 py-3 opacity-60">Day 2</button>
+            </div>
+        </header>
+
+        <main class="p-4">
+            <div id="page-today" class="page-content space-y-4">
+                <div id="scheduleList" class="space-y-3"></div>
+            </div>
+
+            <div id="page-map" class="page-content hidden-page">
+                <div class="bg-white p-6 rounded-xl shadow text-center">
+                    <div class="text-5xl mb-4">🗺️</div>
+                    <h3 class="font-bold mb-2">伊根・亀島エリアマップ</h3>
+                    <p class="text-sm text-gray-500 mb-4">Google Mapsで開きます</p>
+                    <a href="https://www.google.com/maps/search/伊根町+舟屋" target="_blank" class="inline-block bg-primary text-white px-6 py-2 rounded-full">地図を起動</a>
+                </div>
+            </div>
+
+            <div id="page-checklist" class="page-content hidden-page">
+                <h3 class="font-bold mb-4">持ち物チェック</h3>
+                <div class="space-y-2">
+                    <label class="flex items-center p-4 bg-white rounded-lg shadow-sm"><input type="checkbox" class="mr-3"> 防寒着</label>
+                    <label class="flex items-center p-4 bg-white rounded-lg shadow-sm"><input type="checkbox" class="mr-3"> 酔い止め</label>
+                    <label class="flex items-center p-4 bg-white rounded-lg shadow-sm"><input type="checkbox" class="mr-3"> スマホ予備バッテリー</label>
+                </div>
+            </div>
+        </main>
     </div>
+
+    <nav id="bottomNav" class="hidden fixed bottom-0 left-0 right-0 bg-white border-t flex justify-around py-2 shadow-2xl z-50">
+        <button onclick="showPage('today')" class="nav-btn p-2 text-center" id="nav-today">
+            <div class="text-xl">📋</div><div class="text-[10px]">予定</div>
+        </button>
+        <button onclick="showPage('map')" class="nav-btn p-2 text-center opacity-40" id="nav-map">
+            <div class="text-xl">🗺️</div><div class="text-[10px]">地図</div>
+        </button>
+        <button onclick="showPage('checklist')" class="nav-btn p-2 text-center opacity-40" id="nav-checklist">
+            <div class="text-xl">✓</div><div class="text-[10px]">リスト</div>
+        </button>
+    </nav>
 
     <script>
-        const tripData = {
-            '2025-03-24': { title: '1日目：伊根到着', details: '15:00 チェックイン<br>18:00 夕食（地魚料理）' },
-            '2025-03-25': { title: '2日目：亀島散策', details: '09:00 舟屋見学<br>12:00 昼食<br>14:00 釣り体験' },
-            '2025-03-26': { title: '3日目：帰路', details: '10:00 お土産購入<br>12:00 出発' }
+        // データ定義
+        const travelData = {
+            day1: [
+                { time: '08:00', title: '平田到着', desc: '買い出し・朝食。' },
+                { time: '11:00', title: '釣り船乗船', desc: '亀島沖で大物を狙う。' },
+                { time: '15:00', title: '舟屋チェックイン', desc: '宿で休憩。' }
+            ],
+            day2: [
+                { time: '07:00', title: '朝の散策', desc: '静かな伊根湾を歩く。' },
+                { time: '10:00', title: 'お土産購入', desc: '向井酒造など。' },
+                { time: '13:00', title: '帰路', desc: '安全運転で。' }
+            ]
         };
 
-        document.addEventListener('DOMContentLoaded', function() {
-            var calendarEl = document.getElementById('calendar');
-            var calendar = new FullCalendar.Calendar(calendarEl, {
-                initialView: 'dayGridMonth',
-                initialDate: '2025-03-24',
-                locale: 'ja',
-                events: Object.keys(tripData).map(date => ({ title: '旅程あり', start: date, backgroundColor: '#c2410c' })),
-                dateClick: function(info) { showDetails(info.dateStr); }
-            });
-            calendar.render();
+        let currentDay = 1;
+
+        // 1. スタートボタン
+        document.getElementById('startBtn').addEventListener('click', () => {
+            document.getElementById('splash').style.opacity = '0';
+            setTimeout(() => {
+                document.getElementById('splash').classList.add('hidden');
+                document.getElementById('app').classList.remove('hidden');
+                document.getElementById('bottomNav').classList.remove('hidden');
+                renderSchedule(1);
+            }, 500);
         });
 
-        function showDetails(date) {
-            const data = tripData[date];
-            if (data) {
-                document.getElementById('selected-date').innerText = date;
-                document.getElementById('details-content').innerHTML = `<strong>${data.title}</strong><p class="mt-2 text-sm">${data.details}</p>`;
-                document.getElementById('itinerary-details').classList.remove('hidden');
-                window.scrollTo({ top: document.getElementById('itinerary-details').offsetTop, behavior: 'smooth' });
-            }
+        // 2. ページ切り替え
+        function showPage(pageId) {
+            // 全ページ隠す
+            document.querySelectorAll('.page-content').forEach(p => p.classList.add('hidden-page'));
+            // 指定ページ表示
+            document.getElementById('page-' + pageId).classList.remove('hidden-page');
+            
+            // ナビの見た目更新
+            document.querySelectorAll('.nav-btn').forEach(b => b.classList.add('opacity-40'));
+            document.getElementById('nav-' + pageId).classList.remove('opacity-40');
+            
+            // ヘッダータイトルの更新
+            const titles = { today: '今日の予定', map: '地図', checklist: '持ち物' };
+            document.getElementById('pageTitle').innerText = titles[pageId];
+            
+            // 予定ページ以外ではDayタブを隠す
+            document.getElementById('dayTabs').style.display = (pageId === 'today') ? 'flex' : 'none';
         }
 
-        function closeDetails() { document.getElementById('itinerary-details').classList.add('hidden'); }
-
-        if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.register('./sw.js');
+        // 3. Day切り替え
+        function switchDay(day) {
+            currentDay = day;
+            document.getElementById('tabDay1').classList.toggle('active-tab', day === 1);
+            document.getElementById('tabDay2').classList.toggle('active-tab', day === 2);
+            renderSchedule(day);
         }
+
+        // 4. スケジュール描画
+        function renderSchedule(day) {
+            const list = document.getElementById('scheduleList');
+            const data = day === 1 ? travelData.day1 : travelData.day2;
+            list.innerHTML = data.map(item => `
+                <div class="bg-white p-4 rounded-xl shadow-sm border-l-4 border-primary">
+                    <div class="flex items-center mb-1">
+                        <span class="bg-primary text-white text-[10px] px-2 py-1 rounded mr-3">${item.time}</span>
+                        <h3 class="font-bold text-gray-800">${item.title}</h3>
+                    </div>
+                    <p class="text-sm text-gray-500 ml-12">${item.desc}</p>
+                </div>
+            `).join('');
+        }
+
+        // 初期設定
+        document.getElementById('startDate').valueAsDate = new Date();
     </script>
 </body>
 </html>
