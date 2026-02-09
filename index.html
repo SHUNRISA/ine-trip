@@ -1,0 +1,172 @@
+{\rtf1\ansi\ansicpg932\cocoartf2822
+\cocoatextscaling0\cocoaplatform0{\fonttbl\f0\fswiss\fcharset0 Helvetica;}
+{\colortbl;\red255\green255\blue255;}
+{\*\expandedcolortbl;;}
+\paperw11900\paperh16840\margl1440\margr1440\vieww11520\viewh8400\viewkind0
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+
+\f0\fs24 \cf0 <!DOCTYPE html>\
+<html lang="ja">\
+<head>\
+    <meta charset="UTF-8">\
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">\
+    <title>\uc0\u20234 \u26681  \u20096 \u23798 \u12398 \u30007 \u26053 </title>\
+    <script src="https://cdn.tailwindcss.com"></script>\
+    <script>\
+        tailwind.config = \{\
+            theme: \{ extend: \{ colors: \{ primary: '#2C5F2D', secondary: '#D4A574', accent: '#E85D75', warning: '#FF9800' \} \} \}\
+        \}\
+    </script>\
+    <style>\
+        body \{ -webkit-tap-highlight-color: transparent; \}\
+        .active-tab \{ border-bottom: 4px solid white; opacity: 1 !important; \}\
+        .active-nav \{ color: #2C5F2D; font-weight: bold; \}\
+        .hidden-page \{ display: none; \}\
+        .splash-screen \{\
+            background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.7)), url('https://images.unsplash.com/photo-1590559063737-01e448404a7c?auto=format&fit=crop&w=1000');\
+            background-size: cover; background-position: center;\
+        \}\
+    </style>\
+</head>\
+<body class="bg-gray-100">\
+\
+    <div id="splash" class="fixed inset-0 splash-screen flex flex-col items-center justify-center text-white z-50 transition-opacity duration-500">\
+        <div class="text-center px-6">\
+            <h1 class="text-4xl font-bold mb-2">\uc0\u20234 \u26681 </h1>\
+            <h2 class="text-3xl font-bold mb-8">\uc0\u20096 \u23798 \u12398 \u30007 \u26053 </h2>\
+            <div class="bg-white/10 p-6 rounded-xl mb-8 backdrop-blur-md">\
+                <p class="text-sm mb-2 opacity-80">\uc0\u20986 \u30330 \u26085 \u12434 \u36984 \u25246 </p>\
+                <input type="date" id="startDate" class="w-full p-3 rounded text-gray-900 text-center font-bold">\
+            </div>\
+            <button id="startBtn" class="w-full bg-accent py-4 px-12 rounded-lg font-bold text-xl shadow-xl active:scale-95 transition-transform">\
+                \uc0\u26053 \u31243 \u12434 \u35211 \u12427 \
+            </button>\
+        </div>\
+    </div>\
+\
+    <div id="app" class="hidden pb-20">\
+        <header class="bg-primary text-white sticky top-0 z-40 shadow-md">\
+            <div class="px-4 py-4 flex justify-between items-center">\
+                <div>\
+                    <div id="displayDate" class="text-xs opacity-80">2024\uc0\u24180 2\u26376 15\u26085 </div>\
+                    <div id="pageTitle" class="text-xl font-bold">\uc0\u20170 \u26085 \u12398 \u20104 \u23450 </div>\
+                </div>\
+            </div>\
+            <div id="dayTabs" class="flex border-t border-white/20">\
+                <button onclick="switchDay(1)" id="tabDay1" class="flex-1 py-3 opacity-60 active-tab">Day 1</button>\
+                <button onclick="switchDay(2)" id="tabDay2" class="flex-1 py-3 opacity-60">Day 2</button>\
+            </div>\
+        </header>\
+\
+        <main class="p-4">\
+            <div id="page-today" class="page-content space-y-4">\
+                <div id="scheduleList" class="space-y-3"></div>\
+            </div>\
+\
+            <div id="page-map" class="page-content hidden-page">\
+                <div class="bg-white p-6 rounded-xl shadow text-center">\
+                    <div class="text-5xl mb-4">\uc0\u55357 \u56826 \u65039 </div>\
+                    <h3 class="font-bold mb-2">\uc0\u20234 \u26681 \u12539 \u20096 \u23798 \u12456 \u12522 \u12450 \u12510 \u12483 \u12503 </h3>\
+                    <p class="text-sm text-gray-500 mb-4">Google Maps\uc0\u12391 \u38283 \u12365 \u12414 \u12377 </p>\
+                    <a href="https://www.google.com/maps/search/\uc0\u20234 \u26681 \u30010 +\u33311 \u23627 " target="_blank" class="inline-block bg-primary text-white px-6 py-2 rounded-full">\u22320 \u22259 \u12434 \u36215 \u21205 </a>\
+                </div>\
+            </div>\
+\
+            <div id="page-checklist" class="page-content hidden-page">\
+                <h3 class="font-bold mb-4">\uc0\u25345 \u12385 \u29289 \u12481 \u12455 \u12483 \u12463 </h3>\
+                <div class="space-y-2">\
+                    <label class="flex items-center p-4 bg-white rounded-lg shadow-sm"><input type="checkbox" class="mr-3"> \uc0\u38450 \u23506 \u30528 </label>\
+                    <label class="flex items-center p-4 bg-white rounded-lg shadow-sm"><input type="checkbox" class="mr-3"> \uc0\u37204 \u12356 \u27490 \u12417 </label>\
+                    <label class="flex items-center p-4 bg-white rounded-lg shadow-sm"><input type="checkbox" class="mr-3"> \uc0\u12473 \u12510 \u12507 \u20104 \u20633 \u12496 \u12483 \u12486 \u12522 \u12540 </label>\
+                </div>\
+            </div>\
+        </main>\
+    </div>\
+\
+    <nav id="bottomNav" class="hidden fixed bottom-0 left-0 right-0 bg-white border-t flex justify-around py-2 shadow-2xl z-50">\
+        <button onclick="showPage('today')" class="nav-btn p-2 text-center" id="nav-today">\
+            <div class="text-xl">\uc0\u55357 \u56523 </div><div class="text-[10px]">\u20104 \u23450 </div>\
+        </button>\
+        <button onclick="showPage('map')" class="nav-btn p-2 text-center opacity-40" id="nav-map">\
+            <div class="text-xl">\uc0\u55357 \u56826 \u65039 </div><div class="text-[10px]">\u22320 \u22259 </div>\
+        </button>\
+        <button onclick="showPage('checklist')" class="nav-btn p-2 text-center opacity-40" id="nav-checklist">\
+            <div class="text-xl">\uc0\u10003 </div><div class="text-[10px]">\u12522 \u12473 \u12488 </div>\
+        </button>\
+    </nav>\
+\
+    <script>\
+        // \uc0\u12487 \u12540 \u12479 \u23450 \u32681 \
+        const travelData = \{\
+            day1: [\
+                \{ time: '08:00', title: '\uc0\u24179 \u30000 \u21040 \u30528 ', desc: '\u36023 \u12356 \u20986 \u12375 \u12539 \u26397 \u39135 \u12290 ' \},\
+                \{ time: '11:00', title: '\uc0\u37347 \u12426 \u33337 \u20055 \u33337 ', desc: '\u20096 \u23798 \u27798 \u12391 \u22823 \u29289 \u12434 \u29401 \u12358 \u12290 ' \},\
+                \{ time: '15:00', title: '\uc0\u33311 \u23627 \u12481 \u12455 \u12483 \u12463 \u12452 \u12531 ', desc: '\u23487 \u12391 \u20241 \u25001 \u12290 ' \}\
+            ],\
+            day2: [\
+                \{ time: '07:00', title: '\uc0\u26397 \u12398 \u25955 \u31574 ', desc: '\u38745 \u12363 \u12394 \u20234 \u26681 \u28286 \u12434 \u27497 \u12367 \u12290 ' \},\
+                \{ time: '10:00', title: '\uc0\u12362 \u22303 \u29987 \u36092 \u20837 ', desc: '\u21521 \u20117 \u37202 \u36896 \u12394 \u12393 \u12290 ' \},\
+                \{ time: '13:00', title: '\uc0\u24112 \u36335 ', desc: '\u23433 \u20840 \u36939 \u36578 \u12391 \u12290 ' \}\
+            ]\
+        \};\
+\
+        let currentDay = 1;\
+\
+        // 1. \uc0\u12473 \u12479 \u12540 \u12488 \u12508 \u12479 \u12531 \
+        document.getElementById('startBtn').addEventListener('click', () => \{\
+            document.getElementById('splash').style.opacity = '0';\
+            setTimeout(() => \{\
+                document.getElementById('splash').classList.add('hidden');\
+                document.getElementById('app').classList.remove('hidden');\
+                document.getElementById('bottomNav').classList.remove('hidden');\
+                renderSchedule(1);\
+            \}, 500);\
+        \});\
+\
+        // 2. \uc0\u12506 \u12540 \u12472 \u20999 \u12426 \u26367 \u12360 \
+        function showPage(pageId) \{\
+            // \uc0\u20840 \u12506 \u12540 \u12472 \u38560 \u12377 \
+            document.querySelectorAll('.page-content').forEach(p => p.classList.add('hidden-page'));\
+            // \uc0\u25351 \u23450 \u12506 \u12540 \u12472 \u34920 \u31034 \
+            document.getElementById('page-' + pageId).classList.remove('hidden-page');\
+            \
+            // \uc0\u12490 \u12499 \u12398 \u35211 \u12383 \u30446 \u26356 \u26032 \
+            document.querySelectorAll('.nav-btn').forEach(b => b.classList.add('opacity-40'));\
+            document.getElementById('nav-' + pageId).classList.remove('opacity-40');\
+            \
+            // \uc0\u12504 \u12483 \u12480 \u12540 \u12479 \u12452 \u12488 \u12523 \u12398 \u26356 \u26032 \
+            const titles = \{ today: '\uc0\u20170 \u26085 \u12398 \u20104 \u23450 ', map: '\u22320 \u22259 ', checklist: '\u25345 \u12385 \u29289 ' \};\
+            document.getElementById('pageTitle').innerText = titles[pageId];\
+            \
+            // \uc0\u20104 \u23450 \u12506 \u12540 \u12472 \u20197 \u22806 \u12391 \u12399 Day\u12479 \u12502 \u12434 \u38560 \u12377 \
+            document.getElementById('dayTabs').style.display = (pageId === 'today') ? 'flex' : 'none';\
+        \}\
+\
+        // 3. Day\uc0\u20999 \u12426 \u26367 \u12360 \
+        function switchDay(day) \{\
+            currentDay = day;\
+            document.getElementById('tabDay1').classList.toggle('active-tab', day === 1);\
+            document.getElementById('tabDay2').classList.toggle('active-tab', day === 2);\
+            renderSchedule(day);\
+        \}\
+\
+        // 4. \uc0\u12473 \u12465 \u12472 \u12517 \u12540 \u12523 \u25551 \u30011 \
+        function renderSchedule(day) \{\
+            const list = document.getElementById('scheduleList');\
+            const data = day === 1 ? travelData.day1 : travelData.day2;\
+            list.innerHTML = data.map(item => `\
+                <div class="bg-white p-4 rounded-xl shadow-sm border-l-4 border-primary">\
+                    <div class="flex items-center mb-1">\
+                        <span class="bg-primary text-white text-[10px] px-2 py-1 rounded mr-3">$\{item.time\}</span>\
+                        <h3 class="font-bold text-gray-800">$\{item.title\}</h3>\
+                    </div>\
+                    <p class="text-sm text-gray-500 ml-12">$\{item.desc\}</p>\
+                </div>\
+            `).join('');\
+        \}\
+\
+        // \uc0\u21021 \u26399 \u35373 \u23450 \
+        document.getElementById('startDate').valueAsDate = new Date();\
+    </script>\
+</body>\
+</html>}
