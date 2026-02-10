@@ -1,23 +1,20 @@
-{\rtf1\ansi\ansicpg932\cocoartf2822
-\cocoatextscaling0\cocoaplatform0{\fonttbl\f0\fswiss\fcharset0 Helvetica;}
-{\colortbl;\red255\green255\blue255;}
-{\*\expandedcolortbl;;}
-\paperw11900\paperh16840\margl1440\margr1440\vieww11520\viewh8400\viewkind0
-\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
-
-\f0\fs24 \cf0 \{\
-  "name": "\uc0\u20234 \u26681  \u20096 \u23798 \u12398 \u30007 \u26053 ",\
-  "short_name": "\uc0\u20096 \u23798 \u26053 ",\
-  "start_url": "./index.html",\
-  "display": "standalone",\
-  "orientation": "portrait",\
-  "background_color": "#2C5F2D",\
-  "theme_color": "#2C5F2D",\
-  "icons": [\
-    \{\
-      "src": "https://cdn-icons-png.flaticon.com/512/2830/2830312.png",\
-      "sizes": "512x512",\
-      "type": "image/png"\
-    \}\
-  ]\
-\}}
+{
+  "name": "伊根 亀島の男旅",
+  "short_name": "伊根の旅",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#2C5F2D",
+  "theme_color": "#2C5F2D",
+  "icons": [
+    {
+      "src": "icon.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "icon.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
