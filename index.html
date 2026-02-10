@@ -4,127 +4,119 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>伊根 亀島の男旅</title>
+    <link rel="manifest" href="manifest.json">
+    <link rel="apple-touch-icon" href="icon.png">
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        body {
-            margin: 0;
-            padding: 0;
-            font-family: "Hiragino Mincho ProN", serif;
-            overflow: hidden;
-            background-color: #000; /* 動画が出るまで黒背景 */
-        }
-        
-        /* 動画を全画面に固定 */
-        #videoBackground {
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            min-width: 100%;
-            min-height: 100%;
-            width: auto;
-            height: auto;
-            object-fit: cover; /* 画面いっぱいに広げる */
-            z-index: -1; /* 一番奥に配置 */
-        }
-
-        /* 画面を少し暗くする膜 */
-        #overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.4);
-            z-index: 0;
-        }
-
-        /* 文字やボタン */
-        #content {
-            position: relative;
-            z-index: 1;
-            height: 100vh;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            text-align: center;
-        }
-
+        body { margin: 0; font-family: "Hiragino Mincho ProN", serif; background-color: #050505; color: white; }
+        #videoBackground { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); min-width: 100%; min-height: 100%; object-fit: cover; z-index: -1; }
+        #overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.4); z-index: 0; }
+        .content-layer { position: relative; z-index: 1; }
         .hidden { display: none; }
+        .schedule-card { background: rgba(255, 255, 255, 0.95); color: #1a1a1a; border-left: 4px solid #064e3b; }
     </style>
-    <link rel="apple-touch-icon" href="icon.png">
-<link rel="icon" type="image/png" href="icon.png">
 </head>
 <body>
 
     <video id="videoBackground" autoplay muted loop playsinline>
         <source src="./video.mp4" type="video/mp4">
     </video>
-
     <div id="overlay"></div>
 
-    <div id="splash" class="w-full">
-        <div id="content">
-            <h1 class="text-5xl font-bold mb-4 tracking-widest drop-shadow-lg">伊根</h1>
-            <h2 class="text-2xl font-bold mb-10 tracking-widest drop-shadow-md">亀島の男旅</h2>
-            
-            <div class="space-y-2 mb-12 opacity-90">
-                <p class="text-lg">賑わいより、静けさを。</p>
-                <p class="text-lg">景色より、手応えを。</p>
-            </div>
-
-            <div class="w-64 mb-6">
-                <input type="date" id="startDate" class="w-full p-3 rounded-lg text-gray-900 font-bold text-center opacity-90">
-            </div>
-
-            <button id="startBtn" class="bg-emerald-800 hover:bg-emerald-700 text-white font-bold py-3 px-10 rounded-full shadow-xl transition border border-emerald-500">
-                旅程へ進む
-            </button>
+    <div id="splash" class="content-layer h-screen flex flex-direction: column items-center justify-center text-center p-6">
+        <h1 class="text-5xl font-bold mb-4 tracking-widest drop-shadow-lg">伊根</h1>
+        <h2 class="text-2xl font-bold mb-8 tracking-widest opacity-90">亀島の男旅</h2>
+        <p class="mb-10 text-lg opacity-80 leading-relaxed">賑わいより、静けさを。<br>景色より、手応えを。</p>
+        
+        <div class="w-64 mb-6">
+            <input type="date" id="startDate" class="w-full p-4 rounded-xl text-gray-900 font-bold text-center shadow-2xl">
         </div>
+        <button id="startBtn" class="bg-emerald-900 hover:bg-emerald-800 text-white font-bold py-4 px-12 rounded-full shadow-2xl transition-all border border-emerald-700">
+            旅程を確認する
+        </button>
     </div>
 
-    <div id="app" class="hidden bg-gray-100 h-screen w-screen overflow-auto">
-        <div class="p-6">
-            <button id="backBtn" class="mb-4 text-sm text-gray-500">← トップへ戻る</button>
-            <h2 id="selectedDate" class="text-2xl font-bold text-emerald-900 mb-6 border-b-2 border-emerald-800 pb-2 inline-block"></h2>
-            
-            <div class="space-y-4">
-                <div class="bg-white p-5 rounded-lg shadow border-l-4 border-emerald-600">
-                    <p class="text-sm text-gray-500">13:00</p>
-                    <h3 class="font-bold text-lg">現地集合・チェックイン</h3>
-                    <p class="text-gray-600 mt-1">伊根の舟屋「〇〇」に到着。<br>荷物を置いて散策開始。</p>
+    <div id="app" class="hidden content-layer min-h-screen bg-stone-100 text-stone-900 overflow-y-auto pb-20">
+        <div class="bg-emerald-900 text-white p-6 pt-12 shadow-lg">
+            <button id="backBtn" class="mb-4 text-emerald-200">← 戻る</button>
+            <h2 id="selectedDateDisplay" class="text-3xl font-bold tracking-tighter"></h2>
+            <p class="text-emerald-300 mt-2">伊根・亀島 1泊2日の旅</p>
+        </div>
+
+        <div class="p-4 space-y-8 mt-4">
+            <div>
+                <h3 class="text-xl font-bold text-emerald-900 mb-4 border-b-2 border-emerald-200 pb-1">DAY 1: 旅の始まり</h3>
+                <div class="space-y-4">
+                    <div class="schedule-card p-4 rounded-r-lg shadow">
+                        <p class="text-xs font-bold text-emerald-700">09:00</p>
+                        <h4 class="font-bold">京都駅集合</h4>
+                        <p class="text-sm text-gray-600">駅構内で朝食を済ませ、旅を開始。</p>
+                    </div>
+                    <div class="schedule-card p-4 rounded-r-lg shadow">
+                        <p class="text-xs font-bold text-emerald-700">10:00</p>
+                        <h4 class="font-bold">レンタカー出発</h4>
+                        <p class="text-sm text-gray-600">約130kmの北上。日常から非日常へ。</p>
+                    </div>
+                    <div class="schedule-card p-4 rounded-r-lg shadow">
+                        <p class="text-xs font-bold text-emerald-700">13:00</p>
+                        <h4 class="font-bold">伊根到着・平田散策</h4>
+                        <p class="text-sm text-gray-600">舟屋の町並みを歩く。翌朝の朝食を購入。</p>
+                    </div>
+                    <div class="schedule-card p-4 rounded-r-lg shadow">
+                        <p class="text-xs font-bold text-emerald-700">15:00</p>
+                        <h4 class="font-bold">舟宿「まるいち」チェックイン</h4>
+                        <p class="text-sm text-gray-600">本当の静寂が始まる。海の上の滞在。</p>
+                    </div>
+                    <div class="schedule-card p-4 rounded-r-lg shadow">
+                        <p class="text-xs font-bold text-emerald-700">18:00</p>
+                        <h4 class="font-bold">夕食：寿司 いちい</h4>
+                        <p class="text-sm text-gray-600">地産地消。伊根湾の新鮮な寿司。</p>
+                    </div>
                 </div>
-                <div class="bg-white p-5 rounded-lg shadow border-l-4 border-emerald-600">
-                    <p class="text-sm text-gray-500">18:00</p>
-                    <h3 class="font-bold text-lg">夕食・宴会</h3>
-                    <p class="text-gray-600 mt-1">地元のブリしゃぶと日本酒。</p>
+            </div>
+
+            <div>
+                <h3 class="text-xl font-bold text-emerald-900 mb-4 border-b-2 border-emerald-200 pb-1">DAY 2: 釣りの本番</h3>
+                <div class="space-y-4">
+                    <div class="schedule-card p-4 rounded-r-lg shadow">
+                        <p class="text-xs font-bold text-emerald-700">05:30</p>
+                        <h4 class="font-bold">起床・波の音で目覚める</h4>
+                    </div>
+                    <div class="schedule-card p-4 rounded-r-lg shadow">
+                        <p class="text-xs font-bold text-emerald-700">06:00</p>
+                        <h4 class="font-bold">釣り - zero1号</h4>
+                        <p class="text-sm text-gray-600">旅のハイライト。沖へ出て自分と向き合う時間。</p>
+                    </div>
+                    <div class="schedule-card p-4 rounded-r-lg shadow">
+                        <p class="text-xs font-bold text-emerald-700">12:00</p>
+                        <h4 class="font-bold">昼食：食事処なぎさ</h4>
+                        <p class="text-sm text-gray-600">釣りの後の地元の味。</p>
+                    </div>
+                    <div class="schedule-card p-4 rounded-r-lg shadow">
+                        <p class="text-xs font-bold text-emerald-700">16:00</p>
+                        <h4 class="font-bold">帰路・解散</h4>
+                        <p class="text-sm text-gray-600">クーラーボックスの重さを抱えて。</p>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 
     <script>
-        // 今日の日付をセット
         document.getElementById('startDate').value = new Date().toISOString().split('T')[0];
-
         const startBtn = document.getElementById('startBtn');
         const splash = document.getElementById('splash');
         const app = document.getElementById('app');
-        const video = document.getElementById('videoBackground');
 
-        // ボタンを押した時の動き
         startBtn.addEventListener('click', () => {
-            const date = document.getElementById('startDate').value;
-            if(!date) return alert("日付を選んでください");
-
-            splash.classList.add('hidden'); // トップを消す
-            app.classList.remove('hidden'); // 旅程を出す
-            document.getElementById('selectedDate').innerText = date + " の旅程";
+            const date = new Date(document.getElementById('startDate').value);
+            const dateStr = `${date.getMonth() + 1}月${date.getDate()}日`;
+            document.getElementById('selectedDateDisplay').innerText = dateStr;
+            splash.classList.add('hidden');
+            app.classList.remove('hidden');
+            window.scrollTo(0, 0);
         });
 
-        // 戻るボタン
         document.getElementById('backBtn').addEventListener('click', () => {
             app.classList.add('hidden');
             splash.classList.remove('hidden');
