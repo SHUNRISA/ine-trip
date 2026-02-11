@@ -116,7 +116,6 @@
     </div>
     <p class="text-center text-[10px] text-gray-500 pb-2 tracking-widest uppercase">← swipe photos →</p>
 </div>
-                    </div>
                     <div class="schedule-card p-5 rounded-lg">
                         <span class="text-xl font-black text-[#064e3b] block mb-2">10:00</span>
                         <h4 class="font-bold mb-1 text-lg text-gray-900">レンタカー出発</h4>
@@ -152,27 +151,29 @@
             </section>
 
             <section class="min-w-full px-6 snap-center overflow-y-auto pt-8">
-                <div class="mb-6 border-b border-gray-200 pb-2">
-                    <h3 class="text-2xl font-bold text-[#064e3b] tracking-wider font-serif">DAY 2</h3>
-                    <p class="text-xs text-gray-500 mt-1">釣りの本番</p>
-                </div>
+    <div class="mb-6 border-b border-gray-200 pb-2">
+        <h3 class="text-2xl font-bold text-[#064e3b] tracking-wider font-serif">DAY 2</h3>
+        <p class="text-xs text-gray-500 mt-1">釣りの本番</p>
+    </div>
 
-                <div class="space-y-6 pb-20">
-                    <div class="schedule-card p-5 rounded-lg border-l-8 border-[#064e3b] bg-emerald-50/50">
-                        <span class="text-xl font-black text-[#064e3b] block mb-2">06:00</span>
-                        <h4 class="font-bold mb-1 text-xl text-gray-900">釣り - zero1号</h4>
-                        <p class="text-sm text-gray-600">宿の1階から船に乗り、沖へ。旅のハイライト。</p>
-                    </div>
-                    <div class="schedule-card p-5 rounded-lg">
-                        <span class="text-xl font-black text-[#064e3b] block mb-2">12:00</span>
-                        <h4 class="font-bold mb-1 text-lg text-gray-900">昼食：食事処なぎさ</h4>
-                        <p class="text-sm text-gray-600">釣りの後の地元の味を楽しむ。</p>
-                    </div>
-                    <div class="schedule-card p-5 rounded-lg">
-                        <span class="text-xl font-black text-[#064e3b] block mb-2">16:00</span>
-                        <h4 class="font-bold mb-1 text-lg text-gray-900">帰路・解散</h4>
-                        <p class="text-sm text-gray-600">笑った回数の方が多い旅に。</p>
-                    </div>
+    <div class="space-y-6 pb-20">
+        <div class="schedule-card p-5 rounded-lg border-l-8 border-[#064e3b] bg-emerald-50/50 cursor-pointer" onclick="toggleDrawer(this)">
+            <span class="text-xl font-black text-[#064e3b] block mb-2">06:00</span>
+            <h4 class="font-bold mb-1 text-xl text-gray-900">釣り - zero1号 <span class="text-xs text-emerald-600 font-normal ml-2">▼ 写真を見る</span></h4>
+            <p class="text-sm text-gray-600">宿の1階から船に乗り、沖へ。旅のハイライト。</p>
+        </div>
+        
+        <div class="photo-drawer max-h-0 overflow-hidden transition-all duration-500 ease-in-out bg-gray-100 rounded-b-lg border-l-[6px] border-[#064e3b] border-r border-b border-[#e5e5e5] -mt-6 mx-[1px] mb-6 shadow-inner relative z-0 opacity-0">
+            <div class="flex overflow-x-auto snap-x snap-mandatory gap-4 p-5">
+                <img src="./fishing1.jpg" class="snap-center h-56 w-auto rounded-lg shadow-md shrink-0 object-cover" alt="釣り1">
+                <img src="./fishing2.jpg" class="snap-center h-56 w-auto rounded-lg shadow-md shrink-0 object-cover" alt="釣り2">
+            </div>
+            <p class="text-center text-[10px] text-gray-500 pb-2 tracking-widest uppercase">← swipe photos →</p>
+        </div>
+        
+        <div class="schedule-card p-5 rounded-lg">
+            ...
+        </div>
                 </div>
             </section>
 
