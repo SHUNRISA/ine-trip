@@ -115,12 +115,28 @@
         <img src="./kyotostationfood.png" class="snap-center h-56 w-auto rounded-lg shadow-md shrink-0 object-cover" alt="京都駅の食事">
     </div>
     <p class="text-center text-[10px] text-gray-500 pb-2 tracking-widest uppercase">← swipe photos →</p>
+<div class="schedule-card p-5 rounded-lg cursor-pointer hover:bg-gray-50" onclick="toggleDrawer(this)">
+    <span class="text-xl font-black text-[#064e3b] block mb-2">10:00</span>
+    <h4 class="font-bold mb-1 text-lg text-gray-900">
+        レンタカー出発 <span class="text-xs text-emerald-600 font-normal ml-2">▼ 地図を見る</span>
+    </h4>
+    <p class="text-sm text-gray-600">伊根へ向け北上。約130kmのドライブ。</p>
 </div>
-                    <div class="schedule-card p-5 rounded-lg">
-                        <span class="text-xl font-black text-[#064e3b] block mb-2">10:00</span>
-                        <h4 class="font-bold mb-1 text-lg text-gray-900">レンタカー出発</h4>
-                        <p class="text-sm text-gray-600">伊根へ向け北上。約130kmのドライブ。</p>
-                    </div>
+
+<div class="photo-drawer max-h-0 overflow-hidden transition-all duration-500 ease-in-out bg-gray-100 rounded-b-lg border-l-[6px] border-[#064e3b] border-r border-b border-[#e5e5e5] -mt-6 mx-[1px] mb-6 shadow-inner relative z-0 opacity-0">
+    <div class="p-4">
+        <iframe 
+            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3268.125725791787!2d135.75626247643537!3d34.985558168270145!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x600108ae918b02ef%3A0xb614830239617e69!2z5Lqs6YO96aeF!5e0!3m2!1sja!2sjp!4v1700000000000!5m2!1sja!2sjp" 
+            width="100%" 
+            height="250" 
+            style="border:0; border-radius: 8px;" 
+            allowfullscreen="" 
+            loading="lazy" 
+            referrerpolicy="no-referrer-when-downgrade">
+        </iframe>
+        <p class="text-[10px] text-gray-500 mt-2 text-center">※京都駅付近のレンタカー店舗を表示</p>
+    </div>
+</div>
                     
                     <div class="schedule-card p-5 rounded-lg">
                         <span class="text-xl font-black text-[#064e3b] block mb-2">11:30</span>
