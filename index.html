@@ -4,13 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>伊根 亀島の男旅</title>
-    <link rel="manifest" href="manifest.json">
-    <link rel="apple-touch-icon" href="icon.png">
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         body { margin: 0; font-family: "Hiragino Mincho ProN", "Yu Mincho", serif; background-color: #050505; color: white; overflow-x: hidden; }
         
-        /* トップ画面の背景動画 */
+        /* トップ画面の設定 */
         #videoBackground { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); min-width: 100%; min-height: 100%; object-fit: cover; z-index: -1; }
         #overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(to bottom, rgba(0,0,0,0.3), rgba(0,0,0,0.7)); z-index: 0; }
         
@@ -23,10 +21,12 @@
             background-color: #ffffff; 
             min-height: 100vh;
             color: #1a1a1a;
-            overflow-x: hidden; /* 横スクロールはコンテンツ内で行う */
+            overflow-x: hidden;
+            /* セーフエリア対応（上部） */
+            padding-top: env(safe-area-inset-top);
         }
         
-        /* 横スクロールエリアの調整（スクロールバーを隠す） */
+        /* 横スクロールエリアの調整 */
         .snap-x::-webkit-scrollbar { display: none; }
         .snap-x { -ms-overflow-style: none; scrollbar-width: none; }
 
@@ -34,8 +34,17 @@
         .schedule-card { 
             background: #ffffff; 
             border: 1px solid #e5e5e5;
-            border-left: 6px solid #064e3b; /* 左の線を少し太く */
+            border-left: 6px solid #064e3b;
             box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease; /* スタイル変更時のアニメーション */
+        }
+
+        /* 引き出しが開いている時のカードスタイル */
+        .schedule-card.drawer-open {
+            border-bottom: none;
+            border-bottom-left-radius: 0;
+            border-bottom-right-radius: 0;
+            background-color: #fcfcfc;
         }
     </style>
 </head>
@@ -46,7 +55,7 @@
     </video>
     <div id="overlay"></div>
 
-    <div id="splash" class="content-layer h-screen flex flex-col items-center justify-center p-6 text-center">
+    <div id="splash" class="content-layer h-screen flex flex-col items-center justify-center p-6 text-center transition-opacity duration-700">
         <div class="mb-12">
             <h1 class="text-6xl font-bold mb-4 tracking-[0.3em] text-shadow">伊根</h1>
             <h2 class="text-xl font-bold mb-8 tracking-[0.2em] opacity-90 text-shadow">亀島の男旅</h2>
@@ -68,9 +77,9 @@
         </div>
     </div>
 
-    <div id="app" class="content-layer hidden">
+    <div id="app" class="content-layer hidden opacity-0 transition-opacity duration-700">
         
-        <div class="fixed top-0 left-0 w-full z-50 bg-[#EAE6DF] shadow-md px-6 pt-14 pb-4 flex items-center justify-between">
+        <div class="fixed top-0 left-0 w-full z-50 bg-[#EAE6DF] shadow-md px-6 pt-4 pb-4 flex items-center justify-between mt-[env(safe-area-inset-top)]">
             <button onclick="showSplash()" class="text-[#064e3b] text-sm flex items-center font-bold opacity-80 hover:opacity-100 transition-opacity">
                 ← 戻る
             </button>
@@ -80,21 +89,31 @@
             </div>
         </div>
 
-        <div class="flex overflow-x-auto snap-x snap-mandatory w-full h-screen pt-28 pb-10">
+        <div class="flex overflow-x-auto snap-x snap-mandatory w-full h-screen pt-20 pb-10">
             
-            <section class="min-w-full px-6 snap-center overflow-y-auto">
+            <section class="min-w-full px-6 snap-center overflow-y-auto pt-8">
                 <div class="mb-6 border-b border-gray-200 pb-2">
                     <h3 class="text-2xl font-bold text-[#064e3b] tracking-wider font-serif">DAY 1</h3>
                     <p class="text-xs text-gray-500 mt-1">旅の始まり</p>
                 </div>
                 
                 <div class="space-y-6 pb-20">
-                    <div class="schedule-card p-5 rounded-lg cursor-pointer"
-     onclick="showImage('kyotostation.jpg')">
-
-                        <span class="text-xl font-black text-[#064e3b] block mb-2">09:00</span>
-                        <h4 class="font-bold mb-1 text-lg text-gray-900">京都駅集合</h4>
-                        <p class="text-sm text-gray-600">旅の始まり。駅構内で朝食を済ませる。</p>
+                    <div class="schedule-card p-5 rounded-lg cursor-pointer hover:bg-gray-50" onclick="toggleDrawer(this)">
+                        <div class="flex justify-between items-start">
+                            <div>
+                                <span class="text-xl font-black text-[#064e3b] block mb-2">09:00</span>
+                                <h4 class="font-bold mb-1 text-lg text-gray-900">京都駅集合 <span class="text-xs text-emerald-600 font-normal ml-2">▼ 写真を見る</span></h4>
+                                <p class="text-sm text-gray-600">旅の始まり。駅構内で朝食を済ませる。</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="photo-drawer max-h-0 overflow-hidden transition-all duration-500 ease-in-out bg-gray-100 rounded-b-lg border-l-[6px] border-[#064e3b] border-r border-b border-[#e5e5e5] -mt-6 mx-[1px] mb-6 shadow-inner relative z-0 opacity-0">
+                        <div class="flex overflow-x-auto snap-x snap-mandatory gap-4 p-5">
+                            <img src="./kyotostation.jpg" class="snap-center h-56 w-auto rounded-lg shadow-md shrink-0 object-cover" alt="京都駅">
+                            <img src="https://placehold.co/400x600/064e3b/ffffff?text=Kyoto+Tower+View" class="snap-center h-56 w-auto rounded-lg shadow-md shrink-0 object-cover" alt="京都タワー">
+                             <img src="https://placehold.co/600x400/064e3b/ffffff?text=Shinkansen" class="snap-center h-56 w-auto rounded-lg shadow-md shrink-0 object-cover" alt="新幹線">
+                        </div>
+                        <p class="text-center text-[10px] text-gray-500 pb-2 tracking-widest">← SWIPE PHOTOS →</p>
                     </div>
                     <div class="schedule-card p-5 rounded-lg">
                         <span class="text-xl font-black text-[#064e3b] block mb-2">10:00</span>
@@ -130,7 +149,7 @@
                 </div>
             </section>
 
-            <section class="min-w-full px-6 snap-center overflow-y-auto">
+            <section class="min-w-full px-6 snap-center overflow-y-auto pt-8">
                 <div class="mb-6 border-b border-gray-200 pb-2">
                     <h3 class="text-2xl font-bold text-[#064e3b] tracking-wider font-serif">DAY 2</h3>
                     <p class="text-xs text-gray-500 mt-1">釣りの本番</p>
@@ -162,6 +181,7 @@
         // 本日の日付をセット
         document.getElementById('startDate').value = new Date().toISOString().split('T')[0];
 
+        // 画面遷移のアニメーションを滑らかにする修正
         function showSchedule() {
             const dateVal = document.getElementById('startDate').value;
             if (!dateVal) return;
@@ -169,47 +189,88 @@
             const date = new Date(dateVal);
             document.getElementById('selectedDateDisplay').innerText = (date.getMonth() + 1) + "/" + date.getDate();
             
-            document.getElementById('splash').classList.add('hidden');
-            document.getElementById('app').classList.remove('hidden');
-            window.scrollTo(0, 0);
+            const splash = document.getElementById('splash');
+            const app = document.getElementById('app');
+            
+            // フェードアウト
+            splash.classList.add('opacity-0');
+            
+            setTimeout(() => {
+                splash.classList.add('hidden');
+                app.classList.remove('hidden');
+                // フェードインのために少し待つ
+                setTimeout(() => {
+                    app.classList.remove('opacity-0');
+                    window.scrollTo(0, 0);
+                }, 50);
+            }, 700); // CSSのdurationと合わせる
         }
 
         function showSplash() {
-            document.getElementById('app').classList.add('hidden');
-            document.getElementById('splash').classList.remove('hidden');
-            window.scrollTo(0, 0);
+            const splash = document.getElementById('splash');
+            const app = document.getElementById('app');
+
+            app.classList.add('opacity-0');
+            
+            setTimeout(() => {
+                app.classList.add('hidden');
+                splash.classList.remove('hidden');
+                setTimeout(() => {
+                    splash.classList.remove('opacity-0');
+                    window.scrollTo(0, 0);
+                }, 50);
+            }, 700);
         }
+
+        // ▼▼▼ 新追加：引き出し（ドロワー）の開閉制御関数 ▼▼▼
+        function toggleDrawer(cardElement) {
+            // クリックされたカードのすぐ後ろにある要素（写真エリア）を取得
+            const drawer = cardElement.nextElementSibling;
+            
+            // 安全対策：次の要素が写真エリアでなければ何もしない
+            if (!drawer || !drawer.classList.contains('photo-drawer')) return;
+
+            // 開いているかどうかの判定（maxHeightが設定されているかで判断）
+            if (drawer.style.maxHeight) {
+                // 閉じる処理
+                drawer.style.maxHeight = null;
+                drawer.classList.add('opacity-0'); // フェードアウト
+                cardElement.classList.remove('drawer-open'); // カードのスタイルを元に戻す
+                // 完全に閉じた後にz-indexを下げる（重なり防止）
+                setTimeout(() => { drawer.classList.remove('z-10'); }, 500);
+
+            } else {
+                // 開く処理
+                cardElement.classList.add('drawer-open'); // カードの下部を平らにする
+                drawer.classList.add('z-10'); // 前面に出す
+                drawer.classList.remove('opacity-0'); // フェードイン
+                // 内部のコンテンツの高さを取得して設定（これによりアニメーションする）
+                drawer.style.maxHeight = drawer.scrollHeight + "px";
+            }
+        }
+        // ▲▲▲ 新追加ここまで ▲▲▲
+
+        // 既存のモーダル関連関数（今回は使いませんが念のため残しています）
         function showImage(src) {
-    const modal = document.getElementById('imageModal');
-    const img = document.getElementById('modalImg');
-
-    img.src = src;
-
-    modal.classList.remove('pointer-events-none');
-    setTimeout(() => {
-        modal.classList.remove('opacity-0');
-    }, 10);
-}
-
-function closeImage() {
-    const modal = document.getElementById('imageModal');
-
-    modal.classList.add('opacity-0');
-
-    setTimeout(() => {
-        modal.classList.add('pointer-events-none');
-    }, 500);
-}
-
+            const modal = document.getElementById('imageModal');
+            const img = document.getElementById('modalImg');
+            img.src = src;
+            modal.classList.remove('pointer-events-none');
+            setTimeout(() => { modal.classList.remove('opacity-0'); }, 10);
+        }
+        function closeImage() {
+            const modal = document.getElementById('imageModal');
+            modal.classList.add('opacity-0');
+            setTimeout(() => { modal.classList.add('pointer-events-none'); }, 500);
+        }
     </script>
-    <div id="imageModal"
-     class="opacity-0 pointer-events-none fixed inset-0 bg-black/80 flex items-center justify-center z-50 transition-opacity duration-500">
-
-    <div class="relative max-w-3xl w-full p-6 transform scale-95 transition-all duration-500">
-        <button onclick="closeImage()" class="absolute top-2 right-4 text-white text-2xl">×</button>
-        <img id="modalImg" src="" class="w-full rounded-lg shadow-2xl">
+    
+    <div id="imageModal" class="opacity-0 pointer-events-none fixed inset-0 bg-black/90 flex items-center justify-center z-50 transition-opacity duration-500" onclick="closeImage()">
+        <div class="relative max-w-3xl w-full p-4 transform transition-all duration-500">
+            <img id="modalImg" src="" class="w-full rounded-lg shadow-2xl object-contain max-h-[80vh]">
+             <p class="text-white text-center mt-4 text-sm opacity-80">タップして閉じる</p>
+        </div>
     </div>
-</div>
 
 </body>
 </html>
