@@ -18,18 +18,23 @@
         .hidden { display: none !important; }
         .text-shadow { text-shadow: 0px 2px 10px rgba(0,0,0,0.9); }
         
-        /* --- 旅程画面の設定（変更点①：背景を白に）--- */
+        /* 旅程画面の設定 */
         #app { 
-            background-color: #ffffff; /* 画像を消去し白に変更 */
+            background-color: #ffffff; 
             min-height: 100vh;
             color: #1a1a1a;
+            overflow-x: hidden; /* 横スクロールはコンテンツ内で行う */
         }
         
+        /* 横スクロールエリアの調整（スクロールバーを隠す） */
+        .snap-x::-webkit-scrollbar { display: none; }
+        .snap-x { -ms-overflow-style: none; scrollbar-width: none; }
+
         /* スケジュールカードのデザイン */
         .schedule-card { 
             background: #ffffff; 
             border: 1px solid #e5e5e5;
-            border-left: 4px solid #064e3b; 
+            border-left: 6px solid #064e3b; /* 左の線を少し太く */
             box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
         }
     </style>
@@ -75,66 +80,79 @@
             </div>
         </div>
 
-        <div class="px-6 pb-20 mt-28 space-y-10">
+        <div class="flex overflow-x-auto snap-x snap-mandatory w-full h-screen pt-28 pb-10">
             
-            <section>
-                <div class="flex items-center mb-5 border-b border-gray-200 pb-2">
-                    <span class="text-3xl font-black text-[#064e3b] opacity-20 mr-4 font-serif">01</span>
-                    <h3 class="text-lg font-bold text-[#064e3b] tracking-wider">DAY 1: 旅の始まり</h3>
+            <section class="min-w-full px-6 snap-center overflow-y-auto">
+                <div class="mb-6 border-b border-gray-200 pb-2">
+                    <h3 class="text-2xl font-bold text-[#064e3b] tracking-wider font-serif">DAY 1</h3>
+                    <p class="text-xs text-gray-500 mt-1">旅の始まり</p>
                 </div>
-                <div class="space-y-4">
-                    <div class="schedule-card p-4 rounded-lg">
-                        <span class="text-[10px] font-bold text-[#064e3b] block mb-1 opacity-70">09:00</span>
-                        <h4 class="font-bold mb-1 text-gray-900">京都駅集合</h4>
-                        <p class="text-xs text-gray-600">旅の始まり。駅構内で朝食を済ませる。</p>
+                
+                <div class="space-y-6 pb-20">
+                    <div class="schedule-card p-5 rounded-lg">
+                        <span class="text-xl font-black text-[#064e3b] block mb-2">09:00</span>
+                        <h4 class="font-bold mb-1 text-lg text-gray-900">京都駅集合</h4>
+                        <p class="text-sm text-gray-600">旅の始まり。駅構内で朝食を済ませる。</p>
                     </div>
-                    <div class="schedule-card p-4 rounded-lg">
-                        <span class="text-[10px] font-bold text-[#064e3b] block mb-1 opacity-70">10:00</span>
-                        <h4 class="font-bold mb-1 text-gray-900">レンタカー出発</h4>
-                        <p class="text-xs text-gray-600">伊根へ向け北上。約130kmのドライブ。</p>
+                    <div class="schedule-card p-5 rounded-lg">
+                        <span class="text-xl font-black text-[#064e3b] block mb-2">10:00</span>
+                        <h4 class="font-bold mb-1 text-lg text-gray-900">レンタカー出発</h4>
+                        <p class="text-sm text-gray-600">伊根へ向け北上。約130kmのドライブ。</p>
                     </div>
-                    <div class="schedule-card p-4 rounded-lg">
-                        <span class="text-[10px] font-bold text-[#064e3b] block mb-1 opacity-70">13:00</span>
-                        <h4 class="font-bold mb-1 text-gray-900">伊根到着・平田散策</h4>
-                        <p class="text-xs text-gray-600">舟屋の町並みを歩く。翌朝の朝食を購入。</p>
-                        <p class="text-xs mt-2 text-[#064e3b] font-bold border-b border-[#064e3b] inline-block">昼食：伊根手打ち蕎麦 東風</p>
+                    
+                    <div class="schedule-card p-5 rounded-lg">
+                        <span class="text-xl font-black text-[#064e3b] block mb-2">11:30</span>
+                        <h4 class="font-bold mb-1 text-lg text-gray-900">伊根到着・平田散策</h4>
+                        <p class="text-sm text-gray-600">舟屋の町並みを歩く。翌朝の朝食を購入。</p>
                     </div>
-                    <div class="schedule-card p-4 rounded-lg">
-                        <span class="text-[10px] font-bold text-[#064e3b] block mb-1 opacity-70">15:00</span>
-                        <h4 class="font-bold mb-1 text-gray-900">舟宿「まるいち」チェックイン</h4>
-                        <p class="text-xs text-gray-600 leading-relaxed">ここから本当の静寂が始まる。</p>
+                    <div class="schedule-card p-5 rounded-lg">
+                        <span class="text-xl font-black text-[#064e3b] block mb-2">13:00</span>
+                        <h4 class="font-bold mb-1 text-lg text-gray-900">昼食：伊根手打ち蕎麦 東風</h4>
+                        <p class="text-sm text-gray-600">亀島の入口にある人気店。</p>
                     </div>
-                    <div class="schedule-card p-4 rounded-lg bg-[#f9f9f7]">
-                        <span class="text-[10px] font-bold text-[#064e3b] block mb-1 opacity-70">18:00</span>
-                        <h4 class="font-bold mb-1 text-gray-900">夕食：寿司 いちい</h4>
-                        <p class="text-xs text-gray-600">地産地消。伊根湾の新鮮な魚介を堪能。</p>
+
+                    <div class="schedule-card p-5 rounded-lg">
+                        <span class="text-xl font-black text-[#064e3b] block mb-2">15:00</span>
+                        <h4 class="font-bold mb-1 text-lg text-gray-900">舟宿「まるいち」チェックイン</h4>
+                        <p class="text-sm text-gray-600 leading-relaxed">ここから本当の静寂が始まる。</p>
+                    </div>
+                    <div class="schedule-card p-5 rounded-lg bg-[#f9f9f7]">
+                        <span class="text-xl font-black text-[#064e3b] block mb-2">18:00</span>
+                        <h4 class="font-bold mb-1 text-lg text-gray-900">夕食：寿司 いちい</h4>
+                        <p class="text-sm text-gray-600">地産地消。伊根湾の新鮮な魚介を堪能。</p>
+                    </div>
+                    
+                    <div class="text-center text-gray-400 text-xs mt-8 animate-pulse">
+                        ← SWIPE FOR DAY 2
                     </div>
                 </div>
             </section>
 
-            <section>
-                <div class="flex items-center mb-5 border-b border-gray-200 pb-2">
-                    <span class="text-3xl font-black text-[#064e3b] opacity-20 mr-4 font-serif">02</span>
-                    <h3 class="text-lg font-bold text-[#064e3b] tracking-wider">DAY 2: 釣りの本番</h3>
+            <section class="min-w-full px-6 snap-center overflow-y-auto">
+                <div class="mb-6 border-b border-gray-200 pb-2">
+                    <h3 class="text-2xl font-bold text-[#064e3b] tracking-wider font-serif">DAY 2</h3>
+                    <p class="text-xs text-gray-500 mt-1">釣りの本番</p>
                 </div>
-                <div class="space-y-4">
-                    <div class="schedule-card p-4 rounded-lg border-l-4 border-[#064e3b]">
-                        <span class="text-[10px] font-bold text-[#064e3b] block mb-1 opacity-70">06:00</span>
-                        <h4 class="font-bold mb-1 text-lg text-gray-900">釣り - zero1号</h4>
-                        <p class="text-xs text-gray-600">宿の1階から船に乗り、沖へ。旅のハイライト。</p>
+
+                <div class="space-y-6 pb-20">
+                    <div class="schedule-card p-5 rounded-lg border-l-8 border-[#064e3b] bg-emerald-50/50">
+                        <span class="text-xl font-black text-[#064e3b] block mb-2">06:00</span>
+                        <h4 class="font-bold mb-1 text-xl text-gray-900">釣り - zero1号</h4>
+                        <p class="text-sm text-gray-600">宿の1階から船に乗り、沖へ。旅のハイライト。</p>
                     </div>
-                    <div class="schedule-card p-4 rounded-lg">
-                        <span class="text-[10px] font-bold text-[#064e3b] block mb-1 opacity-70">12:00</span>
-                        <h4 class="font-bold mb-1 text-gray-900">昼食：食事処なぎさ</h4>
-                        <p class="text-xs text-gray-600">釣りの後の地元の味を楽しむ。</p>
+                    <div class="schedule-card p-5 rounded-lg">
+                        <span class="text-xl font-black text-[#064e3b] block mb-2">12:00</span>
+                        <h4 class="font-bold mb-1 text-lg text-gray-900">昼食：食事処なぎさ</h4>
+                        <p class="text-sm text-gray-600">釣りの後の地元の味を楽しむ。</p>
                     </div>
-                    <div class="schedule-card p-4 rounded-lg">
-                        <span class="text-[10px] font-bold text-[#064e3b] block mb-1 opacity-70">16:00</span>
-                        <h4 class="font-bold mb-1 text-gray-900">帰路・解散</h4>
-                        <p class="text-xs text-gray-600">笑った回数の方が多い旅に。</p>
+                    <div class="schedule-card p-5 rounded-lg">
+                        <span class="text-xl font-black text-[#064e3b] block mb-2">16:00</span>
+                        <h4 class="font-bold mb-1 text-lg text-gray-900">帰路・解散</h4>
+                        <p class="text-sm text-gray-600">笑った回数の方が多い旅に。</p>
                     </div>
                 </div>
             </section>
+
         </div>
     </div>
 
@@ -147,7 +165,6 @@
             if (!dateVal) return;
             
             const date = new Date(dateVal);
-            // 日付表示のフォーマット調整
             document.getElementById('selectedDateDisplay').innerText = (date.getMonth() + 1) + "/" + date.getDate();
             
             document.getElementById('splash').classList.add('hidden');
