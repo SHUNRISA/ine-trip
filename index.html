@@ -89,7 +89,9 @@
                 </div>
                 
                 <div class="space-y-6 pb-20">
-                    <div class="schedule-card p-5 rounded-lg">
+                    <div class="schedule-card p-5 rounded-lg cursor-pointer"
+     onclick="showImage('kyotostation.jpg')">
+
                         <span class="text-xl font-black text-[#064e3b] block mb-2">09:00</span>
                         <h4 class="font-bold mb-1 text-lg text-gray-900">京都駅集合</h4>
                         <p class="text-sm text-gray-600">旅の始まり。駅構内で朝食を済ませる。</p>
@@ -177,6 +179,37 @@
             document.getElementById('splash').classList.remove('hidden');
             window.scrollTo(0, 0);
         }
+        function showImage(src) {
+    const modal = document.getElementById('imageModal');
+    const img = document.getElementById('modalImg');
+
+    img.src = src;
+
+    modal.classList.remove('pointer-events-none');
+    setTimeout(() => {
+        modal.classList.remove('opacity-0');
+    }, 10);
+}
+
+function closeImage() {
+    const modal = document.getElementById('imageModal');
+
+    modal.classList.add('opacity-0');
+
+    setTimeout(() => {
+        modal.classList.add('pointer-events-none');
+    }, 500);
+}
+
     </script>
+    <div id="imageModal"
+     class="opacity-0 pointer-events-none fixed inset-0 bg-black/80 flex items-center justify-center z-50 transition-opacity duration-500">
+
+    <div class="relative max-w-3xl w-full p-6 transform scale-95 transition-all duration-500">
+        <button onclick="closeImage()" class="absolute top-2 right-4 text-white text-2xl">×</button>
+        <img id="modalImg" src="" class="w-full rounded-lg shadow-2xl">
+    </div>
+</div>
+
 </body>
 </html>
