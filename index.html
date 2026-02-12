@@ -220,11 +220,34 @@
     </div>
 </div>
                     
-                    <div class="schedule-card p-5 rounded-lg bg-[#f9f9f7]">
-                        <span class="text-xl font-black text-[#064e3b] block mb-2">18:00</span>
-                        <h4 class="font-bold mb-1 text-lg text-gray-900">夕食：寿司 いちい</h4>
-                        <p class="text-sm text-gray-600">地産地消。伊根湾の新鮮な魚介を堪能。</p>
-                    </div>
+                    <div class="schedule-card p-5 rounded-lg cursor-pointer hover:bg-gray-50" onclick="toggleDrawer(this)">
+    <div class="flex justify-between items-start">
+        <div>
+            <span class="text-xl font-black text-[#064e3b] block mb-2">18:00</span>
+            <h4 class="font-bold mb-1 text-lg text-gray-900">
+                夕食：神慈や <span class="text-xs text-emerald-600 font-normal ml-2">▼ 写真を見る</span>
+            </h4>
+            <p class="text-sm text-gray-600">伊根の地魚を堪能。落ち着いた空間で男旅の夜を。</p>
+        </div>
+    </div>
+</div>
+
+<div class="photo-drawer max-h-0 overflow-hidden transition-all duration-500 ease-in-out bg-gray-100 rounded-b-lg border-l-[6px] border-[#064e3b] border-r border-b border-[#e5e5e5] -mt-6 mx-[1px] mb-6 shadow-inner relative z-0 opacity-0">
+    <div class="p-4">
+        <div class="flex overflow-x-auto gap-4 pb-4 snap-x snap-mandatory">
+            <div class="shrink-0 snap-center">
+                <img src="kajiya1.jpg" alt="神慈や1" class="h-48 w-72 object-cover rounded-lg shadow-md border border-gray-200">
+            </div>
+            <div class="shrink-0 snap-center">
+                <img src="kajiya2.jpg" alt="神慈や2" class="h-48 w-72 object-cover rounded-lg shadow-md border border-gray-200">
+            </div>
+            <div class="shrink-0 snap-center">
+                <img src="kajiya3.jpg" alt="神慈や3" class="h-48 w-72 object-cover rounded-lg shadow-md border border-gray-200">
+            </div>
+        </div>
+        <p class="text-xs text-gray-500 mt-1 text-center">左右にスワイプして表示</p>
+    </div>
+</div>
                     
                     <div class="text-center text-gray-400 text-xs mt-8 animate-pulse">
                         ← SWIPE FOR DAY 2
