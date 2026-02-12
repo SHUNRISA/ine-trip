@@ -143,14 +143,20 @@
             <section class="min-w-full px-6 snap-center overflow-y-auto pt-8">
                 <div class="mb-6 border-b border-gray-200 pb-2">
                     <h3 class="text-2xl font-bold text-[#064e3b] tracking-wider font-serif">DAY 2</h3>
-                    <p class="text-xs text-gray-500 mt-1">釣りの本番</p>
+                    <p class="text-xs text-gray-500 mt-1">釣りの本番・帰路</p>
                 </div>
                 
                 <div class="space-y-2 pb-40">
+                    
+                    <div class="schedule-card p-5 rounded-lg">
+                        <span class="text-xl font-black text-[#064e3b] block mb-1">05:30</span>
+                        <h4 class="font-bold text-lg text-gray-900">起床</h4>
+                        <p class="text-sm text-gray-600">まだ暗い海が目の前に広がる。</p>
+                    </div>
+
                     <div class="schedule-card p-5 rounded-lg border-l-8 border-[#064e3b] bg-emerald-50/50 cursor-pointer" onclick="toggleDrawer(this)">
                         <span class="text-xl font-black text-[#064e3b] block mb-1">06:00</span>
                         <h4 class="font-bold text-xl text-gray-900">釣り - zero1号 <span class="text-xs text-emerald-600 font-normal ml-2">▼ 写真</span></h4>
-                        <p class="text-sm text-gray-600">早朝から出船。狙いは青物。</p>
                     </div>
                     <div class="photo-drawer max-h-0 overflow-hidden transition-all duration-500 ease-in-out bg-gray-100 rounded-b-lg border-l-[6px] border-[#064e3b] shadow-inner opacity-0">
                         <div class="p-4 flex overflow-x-auto gap-4">
@@ -162,9 +168,32 @@
                     </div>
                     
                     <div class="schedule-card p-5 rounded-lg">
-                        <span class="text-xl font-black text-[#064e3b] block mb-1">12:00</span>
-                        <h4 class="font-bold text-lg text-gray-900">昼食・帰路</h4>
+                        <span class="text-xl font-black text-[#064e3b] block mb-1">10:00</span>
+                        <h4 class="font-bold text-lg text-gray-900">チェックアウト</h4>
+                        <p class="text-sm text-gray-600">釣りはチェックアウトに合わせて4時間だが8時間もある。</p>
                     </div>
+
+                    <div class="schedule-card p-5 rounded-lg cursor-pointer hover:bg-gray-50" onclick="toggleDrawer(this)">
+                        <span class="text-xl font-black text-[#064e3b] block mb-1">12:00</span>
+                        <h4 class="font-bold text-lg text-gray-900">昼食：食事処 なぎさ <span class="text-xs text-emerald-600 font-normal ml-2">▼ 地図</span></h4>
+                        <p class="text-sm text-gray-600">高級中華食材を製造販売する直営店。</p>
+                    </div>
+                    <div class="photo-drawer max-h-0 overflow-hidden transition-all duration-500 ease-in-out bg-gray-100 rounded-b-lg border-l-[6px] border-[#064e3b] shadow-inner opacity-0">
+                         <div class="p-4"><iframe src="https://www.google.com/maps/embed?pb=!1m16!1m12!1m3!1d3268.452697000!2d135.756!3d34.985!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!2m1!1z5Lqs6YO96aeF44CA44Os44Oz44K_44Kr44O8!5e0!3m2!1sja!2sjp!4v1710000000000!5m2!1sja!2sjp" width="100%" height="300" style="border:0; border-radius: 8px;" allowfullscreen="" loading="lazy"></iframe></div>
+                    </div>
+
+                    <div class="schedule-card p-5 rounded-lg">
+                        <span class="text-xl font-black text-[#064e3b] block mb-1">13:00</span>
+                        <h4 class="font-bold text-lg text-gray-900">観光・ゆっくり京都駅へ</h4>
+                        <p class="text-sm text-gray-600">天橋立は景色が良いが車からは見れない。</p>
+                    </div>
+
+                    <div class="schedule-card p-5 rounded-lg">
+                        <span class="text-xl font-black text-[#064e3b] block mb-1">16:00</span>
+                        <h4 class="font-bold text-lg text-gray-900">帰路・解散</h4>
+                        <p class="text-sm text-gray-600">また来る理由はできている？</p>
+                    </div>
+
                 </div>
             </section>
         </div>
