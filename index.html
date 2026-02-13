@@ -6,9 +6,9 @@
     <title>伊根 亀島の男旅</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        body { margin: 0; font-family: "Hiragino Mincho ProN", "Yu Mincho", serif; background-color: #050505; color: white; overflow: hidden; }
+        body { margin: 0; font-family: "Hiragino Mincho ProN", "Yu Mincho", serif; background-color: #050505; color: white; overflow: hidden; -webkit-tap-highlight-color: transparent; }
         
-        /* 背景ビデオ */
+        /* 背景ビデオ・オーバーレイ */
         #videoBackground { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); min-width: 100%; min-height: 100%; object-fit: cover; z-index: -1; }
         #overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(to bottom, rgba(0,0,0,0.4), rgba(0,0,0,0.7)); z-index: 0; }
         
@@ -17,10 +17,10 @@
         .text-shadow { text-shadow: 0px 2px 12px rgba(0,0,0,1); }
 
         /* ロゴ画面用アニメーション */
-        .logo-fade-in { animation: fadeIn 2s ease-out forwards; }
-        @keyframes fadeIn { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
+        .logo-fade-in { animation: fadeIn 2.5s ease-out forwards; }
+        @keyframes fadeIn { 0% { opacity: 0; transform: scale(0.9); filter: blur(10px); } 100% { opacity: 1; transform: scale(1); filter: blur(0); } }
 
-        /* メインアプリ用設定 */
+        /* メインアプリ設定 */
         #app { background-color: #ffffff; color: #1a1a1a; overflow-x: hidden; padding-top: env(safe-area-inset-top); }
         .schedule-card { 
             background: #ffffff; border: 1px solid #e5e5e5; border-left: 6px solid #064e3b;
@@ -33,7 +33,11 @@
         @keyframes wave { 0%, 100% { height: 4px; } 50% { height: 12px; } }
         .wave-2 { animation-delay: 0.2s; }
         .wave-3 { animation-delay: 0.4s; }
-        .is-muted .sound-wave { animation: none; height: 2px !important; }
+        .is-muted .sound-wave { animation: none; height: 2px !important; opacity: 0.3; }
+
+        /* スクロール非表示 */
+        .snap-x::-webkit-scrollbar { display: none; }
+        .snap-x { -ms-overflow-style: none; scrollbar-width: none; }
     </style>
 </head>
 <body>
@@ -46,83 +50,151 @@
     <div id="overlay"></div>
 
     <div id="logoScreen" class="content-layer flex flex-col items-center justify-center p-6 text-center transition-opacity duration-1000 cursor-pointer" onclick="goToTop()">
-        <div class="logo-fade-in">
-            <img src="./logo.png" alt="旅のロゴ" class="w-48 h-48 mx-auto mb-6 object-contain">
-            <p class="text-white text-xs tracking-[0.4em] opacity-60 animate-pulse mt-4">TOUCH TO START</p>
+        <div class="logo-fade-in text-center">
+            <img src="./logo.png" alt="Travel Logo" class="w-64 h-64 mx-auto mb-8 object-contain">
+            <p class="text-white text-[10px] tracking-[0.5em] opacity-50 animate-pulse uppercase">Touch to Start</p>
         </div>
     </div>
 
     <div id="splash" class="content-layer hidden flex flex-col items-center justify-center p-6 text-center transition-opacity duration-700">
         <div class="mb-12">
             <h1 class="text-6xl font-bold mb-4 tracking-[0.3em] text-shadow">伊根</h1>
-            <h2 class="text-xl font-bold mb-8 tracking-[0.2em] opacity-90 text-shadow">亀島の男旅</h2>
+            <h2 class="text-xl font-bold mb-8 tracking-[0.2em] opacity-90 text-shadow uppercase">Kamishima Trip</h2>
             <div class="w-10 h-[1px] bg-white mx-auto mb-8"></div>
-            <p class="text-lg opacity-90 leading-loose text-shadow font-serif">賑わいより、静けさを。<br>景色より、手応えを。</p>
+            <p class="text-lg opacity-90 leading-loose text-shadow font-serif italic">賑わいより、静けさを。<br>景色より、手応えを。</p>
         </div>
         <div class="w-full max-w-xs space-y-6">
-            <input type="date" id="startDate" class="w-full p-4 rounded-lg text-gray-900 font-bold text-center shadow-2xl border-2 border-emerald-900 outline-none">
-            <button onclick="showSchedule()" class="w-full bg-white text-black font-bold py-4 rounded-full shadow-2xl active:scale-95 tracking-widest text-sm">旅程を確認する</button>
+            <div>
+                <label class="block text-[10px] mb-2 tracking-[0.2em] opacity-70 text-shadow font-bold uppercase">Departure Date</label>
+                <input type="date" id="startDate" class="w-full p-4 rounded-lg text-gray-900 font-bold text-center shadow-2xl border-2 border-emerald-900 outline-none">
+            </div>
+            <button onclick="showSchedule()" class="w-full bg-white text-black font-bold py-4 rounded-full shadow-2xl active:scale-95 tracking-widest text-sm transition-all hover:bg-gray-100 uppercase">Confirm Journey</button>
         </div>
     </div>
 
     <div id="app" class="content-layer hidden opacity-0 transition-opacity duration-700">
-        <div class="fixed top-0 left-0 w-full z-50 bg-[#EAE6DF] shadow-md px-6 pt-4 pb-4 flex items-center justify-between mt-[env(safe-area-inset-top)]">
-            <button onclick="backToSplash()" class="text-[#064e3b] text-sm font-bold opacity-80">← 戻る</button>
-            <button onclick="toggleMute()" id="muteBtn" class="flex items-center gap-2 bg-white/50 px-3 py-1 rounded-full border border-gray-300">
+        
+        <header class="fixed top-0 left-0 w-full z-50 bg-[#EAE6DF] shadow-md px-6 pt-4 pb-4 flex items-center justify-between mt-[env(safe-area-inset-top)]">
+            <button onclick="backToSplash()" class="text-[#064e3b] text-sm font-bold opacity-80 active:opacity-100 transition-opacity">← 戻る</button>
+            
+            <button onclick="toggleMute()" id="muteBtn" class="flex items-center gap-2 bg-white/50 px-3 py-1 rounded-full border border-gray-300 transition-all active:scale-90">
                 <div id="waveIcons" class="flex items-end h-3">
                     <div class="sound-wave"></div><div class="sound-wave wave-2"></div><div class="sound-wave wave-3"></div>
                 </div>
                 <span id="muteLabel" class="text-[10px] font-bold text-[#064e3b] uppercase">Music ON</span>
             </button>
+
             <div class="text-right leading-none">
                 <h2 id="selectedDateDisplay" class="text-xl font-bold text-[#064e3b] font-serif"></h2>
                 <p id="viewTitle" class="text-[#064e3b] text-[10px] tracking-widest opacity-70 uppercase font-bold mt-1">Schedule</p>
             </div>
-        </div>
+        </header>
 
-        <div id="scheduleView" class="tab-content flex overflow-x-auto snap-x snap-mandatory w-full h-screen pt-20 pb-10">
-            <section class="min-w-full px-6 snap-center overflow-y-auto pt-8">
-                <h3 class="text-2xl font-bold text-[#064e3b] font-serif mb-6 border-b border-gray-200 pb-2">DAY 1</h3>
-                <div class="space-y-2 pb-40">
-                    <div class="schedule-card p-5 rounded-lg" onclick="toggleDrawer(this)">
-                        <span class="text-xl font-black text-[#064e3b] block mb-1">09:00</span>
-                        <h4 class="font-bold text-lg text-gray-900 font-sans">京都駅集合</h4>
+        <main class="h-full">
+            <div id="scheduleView" class="tab-content flex overflow-x-auto snap-x snap-mandatory w-full h-screen pt-20 pb-10">
+                <section class="min-w-full px-6 snap-center overflow-y-auto pt-8">
+                    <div class="mb-6 border-b border-gray-200 pb-2">
+                        <h3 class="text-2xl font-bold text-[#064e3b] font-serif">DAY 1</h3>
+                        <p class="text-[10px] text-gray-500 uppercase tracking-widest mt-1">The Beginning</p>
                     </div>
-                    <div class="photo-drawer max-h-0 overflow-hidden transition-all duration-500 bg-gray-100 rounded-b-lg border-l-[6px] border-[#064e3b] opacity-0">
-                        <div class="p-4"><img src="./kyotostation2.jpg" class="h-48 w-full rounded-lg object-cover shadow-md"></div>
+                    <div class="space-y-2 pb-40">
+                        <div class="schedule-card p-5 rounded-lg" onclick="toggleDrawer(this)">
+                            <span class="text-xl font-black text-[#064e3b] block mb-1">09:00</span>
+                            <h4 class="font-bold text-lg text-gray-900">京都駅集合 <span class="text-xs text-emerald-600 font-normal ml-2">▼ 詳細</span></h4>
+                            <p class="text-xs text-gray-600">駅ビル内で朝食や買い出し。旅のスタート。</p>
+                        </div>
+                        <div class="photo-drawer max-h-0 overflow-hidden transition-all duration-500 bg-gray-100 rounded-b-lg border-l-[6px] border-[#064e3b] opacity-0">
+                            <div class="p-4"><img src="./kyotostation2.jpg" class="h-48 w-full rounded-lg object-cover shadow-md"></div>
+                        </div>
+
+                        <div class="schedule-card p-5 rounded-lg"><span class="text-xl font-black text-[#064e3b] block mb-1">11:30</span><h4 class="font-bold text-lg text-gray-900">伊根到着・散策</h4></div>
+                        <div class="schedule-card p-5 rounded-lg"><span class="text-xl font-black text-[#064e3b] block mb-1">13:00</span><h4 class="font-bold text-lg text-gray-900">昼食：東風</h4></div>
+                        <div class="schedule-card p-5 rounded-lg"><span class="text-xl font-black text-[#064e3b] block mb-1">15:00</span><h4 class="font-bold text-lg text-gray-900">舟宿：まるいち</h4></div>
+                        <div class="schedule-card p-5 rounded-lg"><span class="text-xl font-black text-[#064e3b] block mb-1">18:00</span><h4 class="font-bold text-lg text-gray-900">夕食：神慈や</h4></div>
+                        
+                        <p class="text-center text-gray-300 text-[10px] pt-12 animate-pulse font-bold tracking-[0.2em]">← SWIPE FOR DAY 2</p>
                     </div>
-                    <div class="schedule-card p-5 rounded-lg"><span class="text-xl font-black text-[#064e3b] block mb-1">11:30</span><h4 class="font-bold text-lg">伊根到着・散策</h4></div>
-                    <div class="schedule-card p-5 rounded-lg"><span class="text-xl font-black text-[#064e3b] block mb-1">13:00</span><h4 class="font-bold text-lg font-sans">昼食：東風</h4></div>
-                </div>
-            </section>
-        </div>
+                </section>
 
-        <div id="logView" class="tab-content hidden w-full h-screen pt-24 px-6 overflow-y-auto pb-40 text-gray-900">
-            <h3 class="text-2xl font-bold text-[#064e3b] font-serif mb-6 border-b border-gray-200 pb-2">旅の記録</h3>
-            <div class="bg-gray-50 p-8 rounded-xl border border-dashed border-gray-300 text-center text-gray-400 text-sm">まだ記録がありません。</div>
-        </div>
+                <section class="min-w-full px-6 snap-center overflow-y-auto pt-8">
+                    <div class="mb-6 border-b border-gray-200 pb-2">
+                        <h3 class="text-2xl font-bold text-[#064e3b] font-serif">DAY 2</h3>
+                        <p class="text-[10px] text-gray-500 uppercase tracking-widest mt-1">Fishing & Return</p>
+                    </div>
+                    <div class="space-y-2 pb-40">
+                        <div class="schedule-card p-5 rounded-lg border-l-8 border-[#064e3b] bg-emerald-50/50" onclick="toggleDrawer(this)">
+                            <span class="text-xl font-black text-[#064e3b] block mb-1">06:00</span>
+                            <h4 class="font-bold text-xl text-gray-900">釣り - zero1号 <span class="text-xs text-emerald-600 font-normal ml-2">▼ 写真</span></h4>
+                            <p class="text-xs text-gray-600">本番の釣り。獲物を狙う。</p>
+                        </div>
+                        <div class="photo-drawer max-h-0 overflow-hidden transition-all duration-500 bg-gray-100 rounded-b-lg border-l-[6px] border-[#064e3b] opacity-0">
+                            <div class="p-4 flex gap-2 overflow-x-auto"><img src="./fish1.jpg" class="h-40 rounded-lg shadow-md"><img src="./fish2.jpg" class="h-40 rounded-lg shadow-md"></div>
+                        </div>
 
-        <div id="shopView" class="tab-content hidden w-full h-screen pt-24 px-6 overflow-y-auto pb-40 text-gray-900">
-            <h3 class="text-2xl font-bold text-[#064e3b] font-serif mb-6 border-b border-gray-200 pb-2">ONLINE SHOP</h3>
-            <div class="flex flex-col items-center justify-center py-20 text-gray-400">
-                <p class="text-xs tracking-[0.5em] uppercase mb-2">Coming Soon</p>
-                <p class="text-sm font-serif">準備中</p>
+                        <div class="schedule-card p-5 rounded-lg" onclick="toggleDrawer(this)">
+                            <span class="text-xl font-black text-[#064e3b] block mb-1">12:00</span>
+                            <h4 class="font-bold text-lg text-gray-900">昼食：両助 <span class="text-xs text-emerald-600 font-normal ml-2">▼ 詳細</span></h4>
+                            <p class="text-xs text-gray-600">山奥の一軒家でいか釜飯とカレー。</p>
+                        </div>
+                        <div class="photo-drawer max-h-0 overflow-hidden transition-all duration-500 bg-gray-100 rounded-b-lg border-l-[6px] border-[#064e3b] opacity-0">
+                            <div class="p-4"><img src="./lunch1.jpg" class="h-48 w-full rounded-lg object-cover shadow-md"></div>
+                        </div>
+
+                        <div class="schedule-card p-5 rounded-lg"><span class="text-xl font-black text-[#064e3b] block mb-1">16:00</span><h4 class="font-bold text-lg text-gray-900">帰路・解散</h4></div>
+                    </div>
+                </section>
             </div>
-        </div>
 
-        <nav class="fixed bottom-0 left-0 w-full bg-white/90 backdrop-blur-md border-t border-gray-200 pb-[env(safe-area-inset-bottom)] z-50">
+            <div id="logView" class="tab-content hidden w-full h-screen pt-24 px-6 overflow-y-auto pb-40">
+                <div class="mb-6 border-b border-gray-200 pb-2">
+                    <h3 class="text-2xl font-bold text-[#064e3b] font-serif">旅の記録</h3>
+                    <p class="text-[10px] text-gray-500 uppercase tracking-widest mt-1">Journey Logs</p>
+                </div>
+                <div class="space-y-4">
+                    <div class="bg-white border border-gray-100 rounded-xl p-4 shadow-sm">
+                        <div class="flex items-center gap-3 mb-3 border-b border-gray-50 pb-2">
+                            <div class="w-10 h-10 bg-[#064e3b] text-white rounded-full flex items-center justify-center font-bold">1</div>
+                            <div>
+                                <p class="text-xs text-gray-400 font-bold">DAY 1 - MEMORY</p>
+                                <p class="text-sm font-bold text-gray-900">伊根の舟屋群に感動</p>
+                            </div>
+                        </div>
+                        <p class="text-xs text-gray-600 leading-relaxed italic">「賑わいより、静けさを」という言葉通り、海と家が一体となった景色は圧巻だった。</p>
+                    </div>
+                    <div class="bg-gray-50 border-2 border-dashed border-gray-200 rounded-xl p-8 text-center">
+                        <p class="text-gray-400 text-xs">新しい記録を追加するには<br>アプリをアップデートしてください</p>
+                    </div>
+                </div>
+            </div>
+
+            <div id="shopView" class="tab-content hidden w-full h-screen pt-24 px-6 overflow-y-auto pb-40">
+                <div class="mb-6 border-b border-gray-200 pb-2">
+                    <h3 class="text-2xl font-bold text-[#064e3b] font-serif">SHOP</h3>
+                    <p class="text-[10px] text-gray-500 uppercase tracking-widest mt-1">Online Boutique</p>
+                </div>
+                <div class="flex flex-col items-center justify-center py-24">
+                    <div class="w-16 h-16 bg-gray-50 rounded-full flex items-center justify-center mb-6">
+                        <svg class="w-8 h-8 text-gray-200" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" stroke-width="1.5"/></svg>
+                    </div>
+                    <p class="text-gray-400 text-xs tracking-[0.6em] uppercase mb-2">Coming Soon</p>
+                    <p class="text-gray-600 text-sm font-serif">伊根の記憶を、お手元に。準備中。</p>
+                </div>
+            </div>
+        </main>
+
+        <nav class="fixed bottom-0 left-0 w-full bg-white/95 backdrop-blur-md border-t border-gray-200 pb-[env(safe-area-inset-bottom)] z-50">
             <div class="flex justify-around items-center h-16">
-                <button onclick="window.open('https://www.google.com/maps/d/edit?hl=ja&mid=1Gy40EOVGdzNLsQG31C5OmLSwKD87LTs&ll=35.67233765030477%2C135.29377539632154&z=15', '_blank')" class="flex flex-col items-center w-full text-[#064e3b] opacity-60">
+                <button onclick="window.open('https://www.google.com/maps/d/edit?hl=ja&mid=1Gy40EOVGdzNLsQG31C5OmLSwKD87LTs&ll=35.67233765030477%2C135.29377539632154&z=15', '_blank')" class="flex flex-col items-center w-full text-[#064e3b] opacity-60 active:opacity-100 transition-opacity">
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M9 6.75V15m6-10.25V15m-10.5 6.75 7.5-3 7.5 3V6.75l-7.5-3-7.5 3v13.5Z" stroke-width="1.5"/></svg>
-                    <span class="text-[10px] font-bold mt-1 uppercase font-sans">Map</span>
+                    <span class="text-[9px] font-bold mt-1 uppercase tracking-widest">Map</span>
                 </button>
-                <button onclick="switchTab('log')" class="flex flex-col items-center w-full text-[#064e3b] opacity-60 border-x border-gray-100">
+                <button onclick="switchTab('log')" class="flex flex-col items-center w-full text-[#064e3b] opacity-60 border-x border-gray-100 active:opacity-100">
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0 1 15.75 21H5.25A2.25 2.25 0 0 1 3 18.75V8.25A2.25 2.25 0 0 1 5.25 6H10" stroke-width="1.5"/></svg>
-                    <span class="text-[10px] font-bold mt-1 uppercase font-sans">Log</span>
+                    <span class="text-[9px] font-bold mt-1 uppercase tracking-widest">Log</span>
                 </button>
-                <button onclick="switchTab('shop')" class="flex flex-col items-center w-full text-[#064e3b] opacity-60">
+                <button onclick="switchTab('shop')" class="flex flex-col items-center w-full text-[#064e3b] opacity-60 active:opacity-100">
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M13.5 21v-7.5a.75.75 0 0 1 .75-.75h3a.75.75 0 0 1 .75.75V21m-15 0V10.5a.75.75 0 0 1 .75-.75h7.5a.75.75 0 0 1 .75.75V21m-9 0h11.25m.75 0h.75m-12 0h-.75M15 5.25a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" stroke-width="1.5"/></svg>
-                    <span class="text-[10px] font-bold mt-1 uppercase font-sans">Shop</span>
+                    <span class="text-[9px] font-bold mt-1 uppercase tracking-widest">Shop</span>
                 </button>
             </div>
         </nav>
@@ -130,74 +202,94 @@
 
     <script>
         const audio = document.getElementById('bgm');
+        let audioStarted = false;
+
         document.getElementById('startDate').value = new Date().toISOString().split('T')[0];
 
-        // 1. ロゴ画面からトップ画面へ（ここで音楽スタート）
+        // 1. ロゴ画面をタップ（ここで音源をロード＆再生開始）
         function goToTop() {
-            audio.play().catch(e => console.log("Audio Play Failed:", e));
-            document.getElementById('logoScreen').classList.add('opacity-0');
+            if (!audioStarted) {
+                audio.play().catch(e => console.log("Audio Start Failed:", e));
+                audioStarted = true;
+            }
+            const logoScreen = document.getElementById('logoScreen');
+            logoScreen.classList.add('opacity-0');
             setTimeout(() => {
-                document.getElementById('logoScreen').classList.add('hidden');
+                logoScreen.classList.add('hidden');
                 document.getElementById('splash').classList.remove('hidden');
             }, 1000);
         }
 
-        // 2. トップ画面からスケジュールへ
+        // 2. 日付画面からメインへ
         function showSchedule() {
             const dateVal = document.getElementById('startDate').value;
             const date = new Date(dateVal);
             document.getElementById('selectedDateDisplay').innerText = (date.getMonth() + 1) + "/" + date.getDate();
+            
             document.getElementById('splash').classList.add('opacity-0');
             setTimeout(() => { 
                 document.getElementById('splash').classList.add('hidden'); 
                 document.getElementById('app').classList.remove('hidden'); 
-                setTimeout(() => { document.getElementById('app').classList.remove('opacity-0'); }, 50); 
+                setTimeout(() => { 
+                    document.getElementById('app').classList.remove('opacity-0'); 
+                    window.scrollTo(0,0);
+                }, 50); 
             }, 700);
         }
 
+        // 音量切替
         function toggleMute() {
-            if (audio.muted) { 
-                audio.muted = false; 
-                document.getElementById('muteLabel').innerText = "Music ON"; 
-                document.getElementById('muteBtn').classList.remove('is-muted');
-                audio.play(); 
-            } else { 
-                audio.muted = true; 
-                document.getElementById('muteLabel').innerText = "Music OFF"; 
-                document.getElementById('muteBtn').classList.add('is-muted'); 
+            const label = document.getElementById('muteLabel');
+            const btn = document.getElementById('muteBtn');
+            if (audio.muted || audio.paused) {
+                audio.muted = false;
+                audio.play();
+                label.innerText = "Music ON";
+                btn.classList.remove('is-muted');
+            } else {
+                audio.muted = true;
+                label.innerText = "Music OFF";
+                btn.classList.add('is-muted');
             }
         }
 
+        // タブ切替
         function switchTab(tab) {
             document.getElementById('scheduleView').classList.add('hidden');
             document.getElementById('logView').classList.add('hidden');
             document.getElementById('shopView').classList.add('hidden');
             document.getElementById(tab + 'View').classList.remove('hidden');
+            
             const titles = { 'schedule': 'Schedule', 'log': 'Log', 'shop': 'Online Shop' };
             document.getElementById('viewTitle').innerText = titles[tab];
+            window.scrollTo(0,0);
         }
 
+        // 戻るボタン
         function backToSplash() {
-            if (!document.getElementById('scheduleView').classList.contains('hidden')) {
+            if (document.getElementById('scheduleView').classList.contains('hidden')) {
+                switchTab('schedule');
+            } else {
                 document.getElementById('app').classList.add('opacity-0');
                 setTimeout(() => { 
                     document.getElementById('app').classList.add('hidden'); 
                     document.getElementById('splash').classList.remove('hidden');
                     document.getElementById('splash').classList.remove('opacity-0');
                 }, 700);
-            } else { switchTab('schedule'); }
+            }
         }
 
+        // 写真ドロワー
         function toggleDrawer(cardElement) {
             const drawer = cardElement.nextElementSibling;
-            if (drawer.style.maxHeight) { 
-                drawer.style.maxHeight = null; 
-                drawer.classList.add('opacity-0'); 
-                cardElement.classList.remove('drawer-open'); 
-            } else { 
-                cardElement.classList.add('drawer-open'); 
-                drawer.classList.remove('opacity-0'); 
-                drawer.style.maxHeight = drawer.scrollHeight + "px"; 
+            if (drawer.style.maxHeight) {
+                drawer.style.maxHeight = null;
+                drawer.classList.add('opacity-0');
+                cardElement.classList.remove('drawer-open');
+            } else {
+                cardElement.classList.add('drawer-open');
+                drawer.classList.remove('opacity-0');
+                drawer.style.maxHeight = drawer.scrollHeight + "px";
             }
         }
     </script>
