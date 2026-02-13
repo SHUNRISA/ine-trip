@@ -6,7 +6,7 @@
     <title>伊根 亀島の男旅</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        body { margin: 0; font-family: "Hiragino Mincho ProN", "Yu Mincho", serif; background-color: #050505; color: white; overflow: hidden; }
+        body { margin: 0; font-family: "Hiragino Mincho ProN", "Yu Mincho", serif; background-color: #050505; color: white; overflow: hidden; -webkit-tap-highlight-color: transparent; }
         
         /* 背景ビデオ・オーバーレイ */
         #videoBackground { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); min-width: 100%; min-height: 100%; object-fit: cover; z-index: -1; }
@@ -38,11 +38,15 @@
         .photo-drawer { margin-top: -8px !important; margin-bottom: 12px !important; position: relative; z-index: 0; }
 
         /* 音波アニメーション */
-        .sound-wave { display: inline-block; width: 2px; height: 10px; background: #064e3b; margin: 0 1px; animation: wave 1s infinite ease-in-out; }
-        @keyframes wave { 0%, 100% { height: 4px; } 50% { height: 12px; } }
+        .sound-wave { display: inline-block; width: 3px; height: 12px; background: #064e3b; margin: 0 1px; animation: wave 1s infinite ease-in-out; }
+        @keyframes wave { 0%, 100% { height: 4px; } 50% { height: 16px; } }
         .wave-2 { animation-delay: 0.2s; }
         .wave-3 { animation-delay: 0.4s; }
-        .is-muted .sound-wave { animation: none; height: 2px !important; }
+        /* ミュート時はアニメーション停止して薄くする */
+        .is-muted .sound-wave { animation: none; height: 3px !important; opacity: 0.3; }
+
+        /* ゆっくりフェードイン用クラス */
+        .duration-2000 { transition-duration: 2000ms; }
     </style>
 </head>
 <body>
@@ -61,35 +65,34 @@
         </div>
     </div>
 
-    <div id="splash" class="content-layer hidden flex flex-col items-center justify-center p-6 text-center transition-opacity duration-700">
+    <div id="splash" class="content-layer hidden opacity-0 flex flex-col items-center justify-center p-6 text-center transition-opacity duration-2000">
         <div class="mb-12">
             <h1 class="text-6xl font-bold mb-4 tracking-[0.3em] text-shadow">伊根</h1>
             <h2 class="text-xl font-bold mb-8 tracking-[0.2em] opacity-90 text-shadow">亀島の男旅</h2>
             <div class="w-10 h-[1px] bg-white mx-auto mb-8"></div>
             <p class="text-lg opacity-90 leading-loose text-shadow font-serif">賑わいより、静けさを。<br>景色より、手応えを。</p>
         </div>
-        <div class="w-full max-w-xs space-y-6">
-            <input type="date" id="startDate" class="w-full p-4 rounded-lg text-gray-900 font-bold text-center shadow-2xl border-2 border-emerald-900 outline-none">
-            <button onclick="showSchedule()" class="w-full bg-white text-black font-bold py-4 rounded-full shadow-2xl active:scale-95 tracking-widest text-sm hover:bg-gray-100 transition-colors">旅程を確認する</button>
+        <div class="w-full max-w-xs space-y-4">
+            <input type="date" id="startDate" class="w-full h-14 px-4 rounded-lg text-gray-900 font-bold text-center shadow-2xl outline-none bg-white/90 backdrop-blur-sm">
+            <button onclick="showSchedule()" class="w-full h-14 bg-white text-black font-bold rounded-full shadow-2xl active:scale-95 tracking-widest text-sm hover:bg-gray-100 transition-colors">旅程を確認する</button>
         </div>
     </div>
 
     <div id="app" class="content-layer hidden opacity-0 transition-opacity duration-700">
         
-        <div class="fixed top-0 left-0 w-full z-50 bg-[#EAE6DF] shadow-md px-6 pt-4 pb-4 flex items-center justify-between mt-[env(safe-area-inset-top)]">
-            <button onclick="backToSplash()" class="text-[#064e3b] text-sm font-bold opacity-80 hover:opacity-100">← 戻る</button>
+        <div class="fixed top-0 left-0 w-full z-50 bg-[#EAE6DF] shadow-md px-6 h-16 flex items-center justify-between mt-[env(safe-area-inset-top)]">
+            <button onclick="backToSplash()" class="text-[#064e3b] text-sm font-bold opacity-80 hover:opacity-100 w-16 text-left">← 戻る</button>
             
-            <button onclick="toggleMute()" id="muteBtn" class="flex items-center gap-2 bg-white/50 px-3 py-1 rounded-full border border-gray-300">
-                <div id="waveIcons" class="flex items-end h-3">
-                    <div class="sound-wave"></div><div class="sound-wave wave-2"></div><div class="sound-wave wave-3"></div>
-                </div>
-                <span id="muteLabel" class="text-[10px] font-bold text-[#064e3b] uppercase">Music ON</span>
-            </button>
-            
-            <div class="text-right leading-none">
+            <div class="absolute left-1/2 transform -translate-x-1/2 text-center leading-none">
                 <h2 id="selectedDateDisplay" class="text-xl font-bold text-[#064e3b] font-serif"></h2>
                 <p id="viewTitle" class="text-[#064e3b] text-[10px] tracking-widest opacity-70 uppercase font-bold mt-1">Schedule</p>
             </div>
+
+            <button onclick="toggleMute()" id="muteBtn" class="w-16 flex justify-end items-center outline-none">
+                <div id="waveIcons" class="flex items-end h-4 gap-[2px]">
+                    <div class="sound-wave"></div><div class="sound-wave wave-2"></div><div class="sound-wave wave-3"></div>
+                </div>
+            </button>
         </div>
 
         <div id="scheduleView" class="tab-content flex overflow-x-auto snap-x snap-mandatory w-full h-screen pt-20 pb-10">
@@ -124,7 +127,7 @@
                         <p class="text-sm text-gray-600">京都駅周辺で車をピックアップ。伊根へ。</p>
                     </div>
                     <div class="photo-drawer max-h-0 overflow-hidden transition-all duration-500 ease-in-out bg-gray-100 rounded-b-lg border-l-[6px] border-[#064e3b] shadow-inner opacity-0">
-                        <div class="p-4"><iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d104576.49168236104!2d135.21099684335938!3d35.6706499!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x5fff93374828b80b%3A0x7d65b71c77873832!2z5Lqs6YO95bqc5a6u5rSl6YOh5LyK5qC555S6!5e0!3m2!1sja!2sjp!4v1715000000000" width="100%" height="300" style="border:0; border-radius: 8px;" allowfullscreen="" loading="lazy"></iframe></div>
+                        <div class="p-4"><iframe src="https://maps.app.goo.gl/fZRpEwi9UaDG7YDL9" width="100%" height="300" style="border:0; border-radius: 8px;" allowfullscreen="" loading="lazy"></iframe></div>
                     </div>
 
                     <div class="schedule-card p-5 rounded-lg cursor-pointer hover:bg-gray-50" onclick="toggleDrawer(this)">
@@ -173,7 +176,7 @@
             <section class="min-w-full px-6 snap-center overflow-y-auto pt-8 pb-32">
                 <div class="mb-6 border-b border-gray-200 pb-2">
                     <h3 class="text-2xl font-bold text-[#064e3b] font-serif">DAY 2</h3>
-                    <p class="text-xs text-gray-500 mt-1">釣りの本番・帰路</p>
+                    <p class="text-xs text-gray-500 mt-1">釣りと帰路</p>
                 </div>
                 
                 <div class="space-y-2">
@@ -208,12 +211,10 @@
                         <p class="text-sm text-gray-600">山奥入った一軒家でいか釜飯とカレー。</p>
                     </div>
                     <div class="photo-drawer max-h-0 overflow-hidden transition-all duration-500 ease-in-out bg-gray-100 rounded-b-lg border-l-[6px] border-[#064e3b] shadow-inner opacity-0">
-                        <div class="p-4">
-                            <div class="flex overflow-x-auto gap-4 pb-2 snap-x snap-mandatory">
-                                <img src="./lunch1.jpg" class="snap-center h-48 w-72 shrink-0 object-cover rounded-lg shadow-md">
-                                <img src="./lunch2.jpg" class="snap-center h-48 w-72 shrink-0 object-cover rounded-lg shadow-md">
-                                <img src="./lunch3.jpg" class="snap-center h-48 w-72 shrink-0 object-cover rounded-lg shadow-md">
-                            </div>
+                        <div class="p-4 flex overflow-x-auto gap-4">
+                            <img src="./lunch1.jpg" class="snap-center h-48 w-72 shrink-0 object-cover rounded-lg shadow-md">
+                            <img src="./lunch2.jpg" class="snap-center h-48 w-72 shrink-0 object-cover rounded-lg shadow-md">
+                            <img src="./lunch3.jpg" class="snap-center h-48 w-72 shrink-0 object-cover rounded-lg shadow-md">
                         </div>
                     </div>
 
@@ -233,7 +234,7 @@
         </div>
 
         <div id="mapView" class="tab-content hidden w-full h-screen pt-20 px-0 overflow-hidden pb-20">
-            <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d52037.66981886131!2d135.2533355446077!3d35.67295777418296!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x5fff85060d4b85d1%3A0xc3f7a40232463e26!2z5Lqs6YO95bqc5LiO6Kyd6YOh5LyK5qC555S6!5e0!3m2!1sja!2sjp!4v1715000000000!5m2!1sja!2sjp" width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
+            <iframe src="https://www.google.com/maps/d/edit?hl=ja&mid=1Gy40EOVGdzNLsQG31C5OmLSwKD87LTs&ll=35.69811968612466%2C135.27604415000002&z=13" width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
         </div>
 
         <div id="logView" class="tab-content hidden w-full h-screen pt-24 px-6 overflow-y-auto pb-40 text-gray-900">
@@ -269,15 +270,29 @@
 
     <script>
         const audio = document.getElementById('bgm');
-        document.getElementById('startDate').value = new Date().toISOString().split('T')[0];
+        let isManuallyPaused = false; 
 
-        // 1. ロゴ画面から日付選択へ
+        // BGMバックグラウンド再生無効（サイトから離れたら停止）
+        document.addEventListener('visibilitychange', () => {
+            if (document.hidden) {
+                audio.pause();
+            } else {
+                if (!audio.muted && !isManuallyPaused) {
+                    audio.play().catch(e => console.log(e));
+                }
+            }
+        });
+
+        // 1. ロゴ画面から日付選択へ (ゆっくりフェードイン)
         function goToTop() {
             audio.play().catch(e => console.log("Audio Play Failed:", e));
             document.getElementById('logoScreen').classList.add('opacity-0');
             setTimeout(() => {
                 document.getElementById('logoScreen').classList.add('hidden');
-                document.getElementById('splash').classList.remove('hidden');
+                const splash = document.getElementById('splash');
+                splash.classList.remove('hidden');
+                // 少し遅延させてopacityを1にすることでtransitionを効かせる
+                setTimeout(() => { splash.classList.remove('opacity-0'); }, 50);
             }, 1000);
         }
 
@@ -295,52 +310,44 @@
                     document.getElementById('app').classList.remove('opacity-0'); 
                     window.scrollTo(0, 0); 
                 }, 50); 
-            }, 700);
+            }, 2000); // splashがゆっくり消えるのを待つ
         }
 
-        // 3. ミュート切り替え
+        // 3. ミュート切り替え (アイコンのみ操作)
         function toggleMute() {
+            const btn = document.getElementById('muteBtn');
             if (audio.muted) { 
                 audio.muted = false; 
-                document.getElementById('muteLabel').innerText = "Music ON"; 
-                document.getElementById('muteBtn').classList.remove('is-muted');
+                isManuallyPaused = false;
+                btn.classList.remove('is-muted');
                 audio.play(); 
             } else { 
                 audio.muted = true; 
-                document.getElementById('muteLabel').innerText = "Music OFF"; 
-                document.getElementById('muteBtn').classList.add('is-muted'); 
+                isManuallyPaused = true;
+                btn.classList.add('is-muted'); 
+                audio.pause();
             }
         }
 
-        // 4. タブ切り替え（Mapもここで処理）
+        // 4. タブ切り替え
         function switchTab(tab) {
-            // 全てのビューを隠す
-            document.getElementById('scheduleView').classList.add('hidden');
-            document.getElementById('logView').classList.add('hidden');
-            document.getElementById('shopView').classList.add('hidden');
-            document.getElementById('mapView').classList.add('hidden'); // Mapも一旦隠す
-            
-            // 選択されたビューだけ表示
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
             document.getElementById(tab + 'View').classList.remove('hidden');
-            
-            // ヘッダーのタイトル変更
             const titles = { 'schedule': 'Schedule', 'log': 'Log', 'shop': 'Online Shop', 'map': 'Area Map' };
             document.getElementById('viewTitle').innerText = titles[tab];
         }
 
         // 5. 戻る処理
         function backToSplash() {
-            // スケジュール以外のタブにいるときはスケジュールに戻る
             if (document.getElementById('scheduleView').classList.contains('hidden')) {
                 switchTab('schedule');
                 return;
             }
-            // スケジュール画面にいるときはスプラッシュに戻る
             document.getElementById('app').classList.add('opacity-0');
             setTimeout(() => { 
                 document.getElementById('app').classList.add('hidden'); 
                 document.getElementById('splash').classList.remove('hidden');
-                document.getElementById('splash').classList.remove('opacity-0');
+                setTimeout(() => { document.getElementById('splash').classList.remove('opacity-0'); }, 50);
             }, 700);
         }
 
@@ -359,6 +366,9 @@
                 drawer.style.maxHeight = drawer.scrollHeight + "px"; 
             }
         }
+        
+        // 初期日付設定
+        document.getElementById('startDate').value = new Date().toISOString().split('T')[0];
     </script>
 </body>
 </html>
