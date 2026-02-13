@@ -24,12 +24,37 @@
         .snap-x::-webkit-scrollbar { display: none; }
         .snap-x { -ms-overflow-style: none; scrollbar-width: none; }
 
-        /* iOSのinputデフォルトスタイルリセット（サイズズレ対策） */
+        /* iOSのinputデフォルトスタイルリセットと垂直中央揃え */
         input[type="date"] {
             -webkit-appearance: none;
             appearance: none;
             background-color: rgba(255, 255, 255, 0.9);
             border-radius: 9999px; /* full rounded */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            min-height: 3.5rem; /* h-14 matches 3.5rem */
+        }
+
+        /* iOS Safariでのテキスト垂直位置ズレ・左寄り対策 */
+        input[type="date"]::-webkit-date-and-time-value {
+            text-align: center;
+            margin: 0 auto;
+            display: inline-block;
+            line-height: 1.5;
+        }
+
+        /* デフォルトのカレンダーアイコンを消す（自前でSVGを置くため） */
+        input[type="date"]::-webkit-calendar-picker-indicator {
+            background: transparent;
+            opacity: 0;
+            position: absolute;
+            right: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            cursor: pointer;
         }
 
         /* ロゴ画面アニメーション */
@@ -88,9 +113,18 @@
             <div class="w-10 h-[1px] bg-white mx-auto mb-8 opacity-80"></div>
             <p class="text-lg opacity-90 leading-loose text-shadow font-serif">賑わいより、静けさを。<br>景色より、手応えを。</p>
         </div>
+        
         <div class="w-full max-w-xs space-y-4">
-            <input type="date" id="startDate" class="w-full h-14 px-4 rounded-full text-gray-900 font-bold text-center shadow-2xl outline-none border-none m-0 box-border block">
-            <button onclick="showSchedule()" class="w-full h-14 bg-white text-black font-bold rounded-full shadow-2xl active:scale-95 tracking-widest text-sm hover:bg-gray-100 transition-colors m-0 box-border block border-none">旅程を確認する</button>
+            <div class="relative w-full">
+                <div class="absolute right-4 top-1/2 transform -translate-y-1/2 pointer-events-none text-gray-500 z-10">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-6 h-6">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 0 1 2.25-2.25h13.5A2.25 2.25 0 0 1 21 7.5v11.25m-18 0A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75m-18 0v-7.5A2.25 2.25 0 0 1 5.25 9h13.5A2.25 2.25 0 0 1 21 11.25v7.5" />
+                    </svg>
+                </div>
+                <input type="date" id="startDate" 
+                       class="w-full h-14 px-4 rounded-full text-gray-900 font-bold text-center shadow-2xl outline-none border-none m-0 box-border block relative z-0 cursor-pointer">
+            </div>
+            <button onclick="showSchedule()" class="w-full h-14 bg-white text-black font-bold rounded-full shadow-2xl active:scale-95 tracking-widest text-sm hover:bg-gray-100 transition-colors m-0 box-border block border-none cursor-pointer">旅程を確認する</button>
         </div>
     </div>
 
@@ -314,9 +348,16 @@
             }, 700); // 0.7秒で切り替え
         }
 
-        // 2. 日付選択からメインスケジュールへ
+        // 2. 日付選択からメインスケジュールへ (バリデーション追加済)
         function showSchedule() {
             const dateVal = document.getElementById('startDate').value;
+
+            // バリデーション：日付が空の場合はアラートを出して中断
+            if (!dateVal) {
+                alert("旅程を開始する日付を選択してください。");
+                return;
+            }
+
             const date = new Date(dateVal);
             document.getElementById('selectedDateDisplay').innerText = (date.getMonth() + 1) + "/" + date.getDate();
             
@@ -385,7 +426,7 @@
             }
         }
         
-        // 初期日付設定
+        // 初期日付設定（当日の日付をセット）
         document.getElementById('startDate').value = new Date().toISOString().split('T')[0];
     </script>
 </body>
