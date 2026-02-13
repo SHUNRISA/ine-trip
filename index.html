@@ -27,6 +27,9 @@
         }
         .schedule-card.drawer-open { border-bottom: none; border-bottom-left-radius: 0; border-bottom-right-radius: 0; background-color: #fcfcfc; margin-bottom: 0 !important; }
         .photo-drawer { margin-top: -8px !important; margin-bottom: 12px !important; }
+
+        /* タブ切り替え用アニメーション */
+        .tab-content { transition: opacity 0.3s ease; }
     </style>
 </head>
 <body>
@@ -57,166 +60,97 @@
             <button onclick="showSplash()" class="text-[#064e3b] text-sm flex items-center font-bold opacity-80 hover:opacity-100 transition-opacity">← 戻る</button>
             <div class="text-right">
                 <h2 id="selectedDateDisplay" class="text-xl font-bold tracking-tight text-[#064e3b] font-serif"></h2>
-                <p class="text-[#064e3b] text-[10px] tracking-widest opacity-70 uppercase">Ine Kameshima Trip</p>
+                <p id="viewTitle" class="text-[#064e3b] text-[10px] tracking-widest opacity-70 uppercase">Schedule</p>
             </div>
         </div>
 
-        <div class="flex overflow-x-auto snap-x snap-mandatory w-full h-screen pt-20 pb-10">
-            
+        <div id="scheduleView" class="tab-content flex overflow-x-auto snap-x snap-mandatory w-full h-screen pt-20 pb-10">
             <section class="min-w-full px-6 snap-center overflow-y-auto pt-8">
                 <div class="mb-6 border-b border-gray-200 pb-2">
                     <h3 class="text-2xl font-bold text-[#064e3b] tracking-wider font-serif">DAY 1</h3>
-                    <p class="text-xs text-gray-500 mt-1">旅の始まり</p>
                 </div>
-
                 <div class="space-y-2 pb-40"> 
-                    
                     <div class="schedule-card p-5 rounded-lg cursor-pointer hover:bg-gray-50" onclick="toggleDrawer(this)">
                         <span class="text-xl font-black text-[#064e3b] block mb-1">09:00</span>
-                        <h4 class="font-bold text-lg text-gray-900">京都駅集合 <span class="text-xs text-emerald-600 font-normal ml-2">▼ ガイド・写真</span></h4>
-                        <p class="text-sm text-gray-600">駅ビル内で朝食や買い出し。旅のスタート。</p>
+                        <h4 class="font-bold text-lg text-gray-900">京都駅集合 <span class="text-xs text-emerald-600 font-normal ml-2">▼ 詳細</span></h4>
+                        <p class="text-sm text-gray-600">駅ビル内で朝食や買い出し。</p>
                     </div>
-                    <div class="photo-drawer max-h-0 overflow-hidden transition-all duration-500 ease-in-out bg-gray-100 rounded-b-lg border-l-[6px] border-[#064e3b] border-r border-b border-[#e5e5e5] shadow-inner relative z-0 opacity-0">
-                        <div class="p-4">
-                            <div class="flex overflow-x-auto gap-4 pb-2 snap-x snap-mandatory">
-                                <img src="./kyotostation2.jpg" class="snap-center h-48 w-72 rounded-lg shadow-md shrink-0 object-cover" alt="京都駅2">
-                                <div class="shrink-0 snap-center w-72 h-48 overflow-hidden rounded-lg border border-gray-200 shadow-md bg-white">
-                                    <iframe src="https://www.kyoto-station-building.co.jp/restaurant_cafe/" width="100%" height="100%" style="border:0;" loading="lazy"></iframe>
-                                </div>
-                            </div>
-                            <p class="text-[10px] text-gray-500 mt-2 text-center tracking-widest uppercase">← swipe: photo & guide →</p>
-                        </div>
+                    <div class="photo-drawer max-h-0 overflow-hidden transition-all duration-500 bg-gray-100 rounded-b-lg border-l-[6px] border-[#064e3b] shadow-inner opacity-0">
+                        <div class="p-4"><img src="./kyotostation2.jpg" class="h-48 w-full rounded-lg shadow-md object-cover"></div>
                     </div>
 
                     <div class="schedule-card p-5 rounded-lg cursor-pointer hover:bg-gray-50" onclick="toggleDrawer(this)">
                         <span class="text-xl font-black text-[#064e3b] block mb-1">10:00</span>
-                        <h4 class="font-bold text-lg text-gray-900">レンタカー出発 <span class="text-xs text-emerald-600 font-normal ml-2">▼ 地図</span></h4>
-                        <p class="text-sm text-gray-600">京都駅周辺で車をピックアップ。伊根へ。</p>
+                        <h4 class="font-bold text-lg text-gray-900">レンタカー出発</h4>
                     </div>
-                    <div class="photo-drawer max-h-0 overflow-hidden transition-all duration-500 ease-in-out bg-gray-100 rounded-b-lg border-l-[6px] border-[#064e3b] shadow-inner relative z-0 opacity-0">
-                        <div class="p-4"><iframe src="https://www.google.com/maps/embed?pb=!1m16!1m12!1m3!1d3268.452697000!2d135.756!3d34.985!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!2m1!1z5Lqs6YO96aeF44CA44Os44Oz44K_44Kr44O8!5e0!3m2!1sja!2sjp!4v1710000000000!5m2!1sja!2sjp" width="100%" height="300" style="border:0; border-radius: 8px;" allowfullscreen="" loading="lazy"></iframe></div>
-                    </div>
-
+                    
                     <div class="schedule-card p-5 rounded-lg cursor-pointer hover:bg-gray-50" onclick="toggleDrawer(this)">
                         <span class="text-xl font-black text-[#064e3b] block mb-1">11:30</span>
-                        <h4 class="font-bold text-lg text-gray-900">伊根到着・平田散策 <span class="text-xs text-emerald-600 font-normal ml-2">▼ 写真</span></h4>
-                        <p class="text-sm text-gray-600">舟屋が連なる平田エリアを散策。</p>
-                    </div>
-                    <div class="photo-drawer max-h-0 overflow-hidden transition-all duration-500 ease-in-out bg-gray-100 rounded-b-lg border-l-[6px] border-[#064e3b] shadow-inner opacity-0">
-                        <div class="p-4 flex overflow-x-auto gap-4"><img src="inewalk1.jpg" class="h-48 w-72 shrink-0 object-cover rounded-lg shadow-md"><img src="inewalk2.jpg" class="h-48 w-72 shrink-0 object-cover rounded-lg shadow-md"><img src="inewalk3.jpg" class="h-48 w-72 shrink-0 object-cover rounded-lg shadow-md"></div>
+                        <h4 class="font-bold text-lg text-gray-900">平田エリア散策</h4>
                     </div>
 
                     <div class="schedule-card p-5 rounded-lg cursor-pointer hover:bg-gray-50" onclick="toggleDrawer(this)">
                         <span class="text-xl font-black text-[#064e3b] block mb-1">13:00</span>
-                        <h4 class="font-bold text-lg text-gray-900">昼食：東風 <span class="text-xs text-emerald-600 font-normal ml-2">▼ 写真</span></h4>
-                        <p class="text-sm text-gray-600">亀島の入り口にある人気店。</p>
-                    </div>
-                    <div class="photo-drawer max-h-0 overflow-hidden transition-all duration-500 ease-in-out bg-gray-100 rounded-b-lg border-l-[6px] border-[#064e3b] shadow-inner opacity-0">
-                        <div class="p-4 flex overflow-x-auto gap-4"><img src="soba1.jpg" class="h-48 w-72 shrink-0 object-cover rounded-lg shadow-md"><img src="soba2.jpg" class="h-48 w-72 shrink-0 object-cover rounded-lg shadow-md"><img src="soba3.jpg" class="h-48 w-72 shrink-0 object-cover rounded-lg shadow-md"></div>
+                        <h4 class="font-bold text-lg text-gray-900">昼食：東風</h4>
                     </div>
 
-                    <div class="schedule-card p-5 rounded-lg cursor-pointer hover:bg-gray-50" onclick="toggleDrawer(this)">
-                        <span class="text-xl font-black text-[#064e3b] block mb-1">15:00</span>
-                        <h4 class="font-bold text-lg text-gray-900">舟宿：まるいち <span class="text-xs text-emerald-600 font-normal ml-2">▼ 写真</span></h4>
-                        <p class="text-sm text-gray-600">伊根でも評判の舟宿。</p>
-                    </div>
-                    <div class="photo-drawer max-h-0 overflow-hidden transition-all duration-500 ease-in-out bg-gray-100 rounded-b-lg border-l-[6px] border-[#064e3b] shadow-inner opacity-0">
-                        <div class="p-4 flex overflow-x-auto gap-4"><img src="maruichi1.jpg" class="h-48 w-72 shrink-0 object-cover rounded-lg shadow-md"><img src="maruichi2.jpg" class="h-48 w-72 shrink-0 object-cover rounded-lg shadow-md"><img src="maruichi3.jpg" class="h-48 w-72 shrink-0 object-cover rounded-lg shadow-md"></div>
-                    </div>
-
-                    <div class="schedule-card p-5 rounded-lg cursor-pointer hover:bg-gray-50" onclick="toggleDrawer(this)">
-                        <span class="text-xl font-black text-[#064e3b] block mb-1">18:00</span>
-                        <h4 class="font-bold text-lg text-gray-900">夕食：神慈や <span class="text-xs text-emerald-600 font-normal ml-2">▼ 写真</span></h4>
-                        <p class="text-sm text-gray-600">地産地消の新鮮な海の幸を堪能。</p>
-                    </div>
-                    <div class="photo-drawer max-h-0 overflow-hidden transition-all duration-500 ease-in-out bg-gray-100 rounded-b-lg border-l-[6px] border-[#064e3b] shadow-inner opacity-0">
-                        <div class="p-4 flex overflow-x-auto gap-4"><img src="kajiya1.jpg" class="h-48 w-72 shrink-0 object-cover rounded-lg shadow-md"><img src="kajiya2.jpg" class="h-48 w-72 shrink-0 object-cover rounded-lg shadow-md"><img src="kajiya3.jpg" class="h-48 w-72 shrink-0 object-cover rounded-lg shadow-md"></div>
-                    </div>
-
-                    <div class="text-center text-gray-400 text-[10px] pt-12 pb-10 animate-pulse tracking-[0.2em]">
-                        <span class="block mb-2 text-lg">←</span>
-                        LEFT SWIPE FOR DAY 2
-                    </div>
+                    <div class="text-center text-gray-400 text-[10px] pt-12 pb-10 animate-pulse">← SWIPE FOR DAY 2</div>
                 </div>
             </section>
 
             <section class="min-w-full px-6 snap-center overflow-y-auto pt-8">
                 <div class="mb-6 border-b border-gray-200 pb-2">
                     <h3 class="text-2xl font-bold text-[#064e3b] tracking-wider font-serif">DAY 2</h3>
-                    <p class="text-xs text-gray-500 mt-1">釣りの本番・帰路</p>
                 </div>
-                
                 <div class="space-y-2 pb-40">
+                    <div class="schedule-card p-5 rounded-lg"><span class="text-xl font-black text-[#064e3b] block mb-1">06:00</span><h4 class="font-bold text-lg">釣り - zero1号</h4></div>
                     
-                    <div class="schedule-card p-5 rounded-lg">
-                        <span class="text-xl font-black text-[#064e3b] block mb-1">05:30</span>
-                        <h4 class="font-bold text-lg text-gray-900">起床</h4>
-                        <p class="text-sm text-gray-600">まだ暗い海が目の前に広がる。</p>
-                    </div>
-
-                    <div class="schedule-card p-5 rounded-lg border-l-8 border-[#064e3b] bg-emerald-50/50 cursor-pointer" onclick="toggleDrawer(this)">
-                        <span class="text-xl font-black text-[#064e3b] block mb-1">06:00</span>
-                        <h4 class="font-bold text-xl text-gray-900">釣り - zero1号 <span class="text-xs text-emerald-600 font-normal ml-2">▼ 写真</span></h4>
-                    </div>
-                    <div class="photo-drawer max-h-0 overflow-hidden transition-all duration-500 ease-in-out bg-gray-100 rounded-b-lg border-l-[6px] border-[#064e3b] shadow-inner opacity-0">
-                        <div class="p-4 flex overflow-x-auto gap-4">
-                            <img src="./fish1.jpg" class="h-48 w-72 shrink-0 object-cover rounded-lg shadow-md">
-                            <img src="./fish2.jpg" class="h-48 w-72 shrink-0 object-cover rounded-lg shadow-md">
-                            <img src="./fish3.jpg" class="h-48 w-72 shrink-0 object-cover rounded-lg shadow-md">
-                            <img src="./fish4.jpg" class="h-48 w-72 shrink-0 object-cover rounded-lg shadow-md">
-                        </div>
-                    </div>
-                    
-                    <div class="schedule-card p-5 rounded-lg">
-                        <span class="text-xl font-black text-[#064e3b] block mb-1">10:00</span>
-                        <h4 class="font-bold text-lg text-gray-900">チェックアウト</h4>
-                        <p class="text-sm text-gray-600">釣りはチェックアウトに合わせて4時間だが8時間もある。</p>
-                    </div>
-
                     <div class="schedule-card p-5 rounded-lg cursor-pointer hover:bg-gray-50" onclick="toggleDrawer(this)">
                         <span class="text-xl font-black text-[#064e3b] block mb-1">12:00</span>
                         <h4 class="font-bold text-lg text-gray-900">昼食：両助 <span class="text-xs text-emerald-600 font-normal ml-2">▼ 写真</span></h4>
                         <p class="text-sm text-gray-600">山奥入った一軒家でいか釜飯とカレー。</p>
                     </div>
-                    <div class="photo-drawer max-h-0 overflow-hidden transition-all duration-500 ease-in-out bg-gray-100 rounded-b-lg border-l-[6px] border-[#064e3b] shadow-inner opacity-0">
-                        <div class="p-4">
-                            <div class="flex overflow-x-auto gap-4 pb-2 snap-x snap-mandatory">
-                                <img src="./lunch1.jpg" class="snap-center h-48 w-72 shrink-0 object-cover rounded-lg shadow-md">
-                                <img src="./lunch2.jpg" class="snap-center h-48 w-72 shrink-0 object-cover rounded-lg shadow-md">
-                                <img src="./lunch3.jpg" class="snap-center h-48 w-72 shrink-0 object-cover rounded-lg shadow-md">
-                            </div>
+                    <div class="photo-drawer max-h-0 overflow-hidden transition-all duration-500 bg-gray-100 rounded-b-lg border-l-[6px] border-[#064e3b] shadow-inner opacity-0">
+                        <div class="p-4 flex overflow-x-auto gap-4">
+                            <img src="./lunch1.jpg" class="h-48 w-72 shrink-0 object-cover rounded-lg shadow-md">
+                            <img src="./lunch2.jpg" class="h-48 w-72 shrink-0 object-cover rounded-lg shadow-md">
+                            <img src="./lunch3.jpg" class="h-48 w-72 shrink-0 object-cover rounded-lg shadow-md">
                         </div>
                     </div>
-
-                    <div class="schedule-card p-5 rounded-lg">
-                        <span class="text-xl font-black text-[#064e3b] block mb-1">13:00</span>
-                        <h4 class="font-bold text-lg text-gray-900">観光・ゆっくり京都駅へ</h4>
-                        <p class="text-sm text-gray-600">天橋立は景色が良いが車からは見れない。</p>
-                    </div>
-
-                    <div class="schedule-card p-5 rounded-lg">
-                        <span class="text-xl font-black text-[#064e3b] block mb-1">16:00</span>
-                        <h4 class="font-bold text-lg text-gray-900">帰路・解散</h4>
-                        <p class="text-sm text-gray-600">また来る理由はできている？</p>
-                    </div>
-
+                    <div class="schedule-card p-5 rounded-lg"><span class="text-xl font-black text-[#064e3b] block mb-1">16:00</span><h4 class="font-bold text-lg">帰路・解散</h4></div>
                 </div>
             </section>
         </div>
 
+        <div id="logView" class="tab-content hidden w-full h-screen pt-24 px-6 overflow-y-auto pb-40">
+            <h3 class="text-2xl font-bold text-[#064e3b] tracking-wider font-serif mb-6 border-b border-gray-200 pb-2">旅の記録</h3>
+            
+            <div class="space-y-6">
+                <div class="bg-gray-50 p-6 rounded-xl border border-dashed border-gray-300 text-center">
+                    <p class="text-gray-400 text-sm italic">まだ記録がありません。<br>旅の思い出をここに残しましょう。</p>
+                </div>
+
+                <div class="border-l-2 border-emerald-800 pl-4 py-2">
+                    <span class="text-[10px] text-emerald-800 font-bold uppercase tracking-widest">202X.MM.DD</span>
+                    <h4 class="font-bold text-lg text-gray-900">ここにタイトルが入ります</h4>
+                    <p class="text-sm text-gray-600 mt-2 leading-relaxed">ここに場所や感想などのメモを記載。写真は上のスケジュールからいつでも見返すことができます。</p>
+                </div>
+            </div>
+        </div>
+
         <nav class="fixed bottom-0 left-0 w-full bg-white/90 backdrop-blur-md border-t border-gray-200 pb-[env(safe-area-inset-bottom)] z-50">
             <div class="flex justify-around items-center h-16">
-                <button class="flex flex-col items-center justify-center w-full text-[#064e3b] opacity-80 hover:opacity-100">
+                <button onclick="window.open('https://www.google.com/maps/d/edit?hl=ja&mid=1Gy40EOVGdzNLsQG31C5OmLSwKD87LTs&ll=35.67233765030477%2C135.29377539632154&z=15', '_blank')" class="flex flex-col items-center justify-center w-full text-[#064e3b] opacity-80 hover:opacity-100">
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M9 6.75V15m6-10.25V15m-10.5 6.75 7.5-3 7.5 3V6.75l-7.5-3-7.5 3v13.5Z" stroke-width="1.5"/></svg>
                     <span class="text-[10px] font-bold mt-1 uppercase">Map</span>
                 </button>
-                <button class="flex flex-col items-center justify-center w-full text-[#064e3b] opacity-80 border-x border-gray-100">
+                <button onclick="switchTab('log')" class="flex flex-col items-center justify-center w-full text-[#064e3b] opacity-80 border-x border-gray-100 hover:opacity-100">
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0 1 15.75 21H5.25A2.25 2.25 0 0 1 3 18.75V8.25A2.25 2.25 0 0 1 5.25 6H10" stroke-width="1.5"/></svg>
                     <span class="text-[10px] font-bold mt-1 uppercase">Log</span>
                 </button>
-                <button class="flex flex-col items-center justify-center w-full text-[#064e3b] opacity-80">
+                <button onclick="alert('Coming Soon')" class="flex flex-col items-center justify-center w-full text-gray-400">
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M13.5 21v-7.5a.75.75 0 0 1 .75-.75h3a.75.75 0 0 1 .75.75V21m-15 0V10.5a.75.75 0 0 1 .75-.75h7.5a.75.75 0 0 1 .75.75V21m-9 0h11.25m.75 0h.75m-12 0h-.75M15 5.25a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" stroke-width="1.5"/></svg>
-                    <span class="text-[10px] font-bold mt-1 uppercase">Shop</span>
+                    <span class="text-[10px] font-bold mt-1 uppercase">Soon</span>
                 </button>
             </div>
         </nav>
@@ -224,30 +158,62 @@
 
     <script>
         document.getElementById('startDate').value = new Date().toISOString().split('T')[0];
+
         function showSchedule() {
             const dateVal = document.getElementById('startDate').value;
             if (!dateVal) return;
             const date = new Date(dateVal);
             document.getElementById('selectedDateDisplay').innerText = (date.getMonth() + 1) + "/" + date.getDate();
-            const splash = document.getElementById('splash');
-            const app = document.getElementById('app');
-            splash.classList.add('opacity-0');
+            
+            document.getElementById('splash').classList.add('opacity-0');
             setTimeout(() => { 
-                splash.classList.add('hidden'); 
-                app.classList.remove('hidden'); 
-                setTimeout(() => { app.classList.remove('opacity-0'); window.scrollTo(0, 0); }, 50); 
+                document.getElementById('splash').classList.add('hidden'); 
+                document.getElementById('app').classList.remove('hidden'); 
+                setTimeout(() => { document.getElementById('app').classList.remove('opacity-0'); }, 50); 
             }, 700);
         }
+
         function showSplash() {
-            const splash = document.getElementById('splash');
-            const app = document.getElementById('app');
-            app.classList.add('opacity-0');
+            document.getElementById('app').classList.add('opacity-0');
             setTimeout(() => { 
-                app.classList.add('hidden'); 
-                splash.classList.remove('hidden'); 
-                setTimeout(() => { splash.classList.remove('opacity-0'); window.scrollTo(0, 0); }, 50); 
+                document.getElementById('app').classList.add('hidden'); 
+                document.getElementById('splash').classList.remove('hidden'); 
+                setTimeout(() => { document.getElementById('splash').classList.remove('opacity-0'); }, 50); 
             }, 700);
         }
+
+        function switchTab(tab) {
+            const scheduleView = document.getElementById('scheduleView');
+            const logView = document.getElementById('logView');
+            const title = document.getElementById('viewTitle');
+
+            if (tab === 'log') {
+                scheduleView.classList.add('hidden');
+                logView.classList.remove('hidden');
+                title.innerText = "Log";
+            } else {
+                logView.classList.add('hidden');
+                scheduleView.classList.remove('hidden');
+                title.innerText = "Schedule";
+            }
+            window.scrollTo(0, 0);
+        }
+
+        // 戻るボタンの挙動を修正（LogからScheduleへ戻るように）
+        function showSplash() {
+            const logView = document.getElementById('logView');
+            if (!logView.classList.contains('hidden')) {
+                switchTab('schedule');
+                return;
+            }
+            document.getElementById('app').classList.add('opacity-0');
+            setTimeout(() => { 
+                document.getElementById('app').classList.add('hidden'); 
+                document.getElementById('splash').classList.remove('hidden'); 
+                setTimeout(() => { document.getElementById('splash').classList.remove('opacity-0'); }, 50); 
+            }, 700);
+        }
+
         function toggleDrawer(cardElement) {
             const drawer = cardElement.nextElementSibling;
             if (!drawer || !drawer.classList.contains('photo-drawer')) return;
