@@ -2,15 +2,19 @@
 <html lang="ja">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>伊根 亀島の男旅</title>
+    
+    <link rel="icon" href="./logo.png">
+    <link rel="apple-touch-icon" href="./logo.png">
+    
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         body { margin: 0; font-family: "Hiragino Mincho ProN", "Yu Mincho", serif; background-color: #050505; color: white; overflow: hidden; -webkit-tap-highlight-color: transparent; }
         
         /* 背景ビデオ・オーバーレイ */
         #videoBackground { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); min-width: 100%; min-height: 100%; object-fit: cover; z-index: -1; }
-        #overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(to bottom, rgba(0,0,0,0.4), rgba(0,0,0,0.8)); z-index: 0; }
+        #overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(to bottom, rgba(0,0,0,0.3), rgba(0,0,0,0.8)); z-index: 0; }
         
         .content-layer { position: relative; z-index: 10; width: 100%; height: 100vh; }
         .hidden { display: none !important; }
@@ -20,9 +24,21 @@
         .snap-x::-webkit-scrollbar { display: none; }
         .snap-x { -ms-overflow-style: none; scrollbar-width: none; }
 
+        /* iOSのinputデフォルトスタイルリセット（サイズズレ対策） */
+        input[type="date"] {
+            -webkit-appearance: none;
+            appearance: none;
+            background-color: rgba(255, 255, 255, 0.9);
+            border-radius: 9999px; /* full rounded */
+        }
+
         /* ロゴ画面アニメーション */
         .logo-fade-in { animation: fadeIn 2s ease-out forwards; }
         @keyframes fadeIn { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
+
+        /* 文字だけゆっくりフェードイン */
+        .text-slow-fade { opacity: 0; animation: textFade 3s ease-out forwards; animation-delay: 0.5s; }
+        @keyframes textFade { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
         /* アプリ画面設定 */
         #app { background-color: #ffffff; color: #1a1a1a; overflow-x: hidden; padding-top: env(safe-area-inset-top); }
@@ -45,8 +61,8 @@
         /* ミュート時はアニメーション停止して薄くする */
         .is-muted .sound-wave { animation: none; height: 3px !important; opacity: 0.3; }
 
-        /* ゆっくりフェードイン用クラス */
-        .duration-2000 { transition-duration: 2000ms; }
+        /* 画面遷移用 */
+        .duration-700 { transition-duration: 700ms; }
     </style>
 </head>
 <body>
@@ -58,23 +74,23 @@
     </video>
     <div id="overlay"></div>
 
-    <div id="logoScreen" class="content-layer flex flex-col items-center justify-center p-6 text-center transition-opacity duration-1000 cursor-pointer" onclick="goToTop()">
+    <div id="logoScreen" class="content-layer flex flex-col items-center justify-center p-6 text-center transition-opacity duration-700 cursor-pointer" onclick="goToTop()">
         <div class="logo-fade-in">
             <img src="./logo.png" alt="旅のロゴ" class="w-48 h-48 mx-auto mb-6 object-contain">
             <p class="text-white text-xs tracking-[0.4em] opacity-60 animate-pulse mt-4">TOUCH TO START</p>
         </div>
     </div>
 
-    <div id="splash" class="content-layer hidden opacity-0 flex flex-col items-center justify-center p-6 text-center transition-opacity duration-2000">
+    <div id="splash" class="content-layer hidden opacity-0 flex flex-col items-center justify-center p-6 text-center transition-opacity duration-1000">
         <div class="mb-12">
-            <h1 class="text-6xl font-bold mb-4 tracking-[0.3em] text-shadow">伊根</h1>
-            <h2 class="text-xl font-bold mb-8 tracking-[0.2em] opacity-90 text-shadow">亀島の男旅</h2>
-            <div class="w-10 h-[1px] bg-white mx-auto mb-8"></div>
+            <h1 class="text-6xl font-bold mb-4 tracking-[0.3em] text-shadow text-slow-fade">伊根</h1>
+            <h2 class="text-xl font-bold mb-8 tracking-[0.2em] opacity-90 text-shadow text-slow-fade" style="animation-delay: 1.5s;">亀島の男旅</h2>
+            <div class="w-10 h-[1px] bg-white mx-auto mb-8 opacity-80"></div>
             <p class="text-lg opacity-90 leading-loose text-shadow font-serif">賑わいより、静けさを。<br>景色より、手応えを。</p>
         </div>
         <div class="w-full max-w-xs space-y-4">
-            <input type="date" id="startDate" class="w-full h-14 px-4 rounded-lg text-gray-900 font-bold text-center shadow-2xl outline-none bg-white/90 backdrop-blur-sm">
-            <button onclick="showSchedule()" class="w-full h-14 bg-white text-black font-bold rounded-full shadow-2xl active:scale-95 tracking-widest text-sm hover:bg-gray-100 transition-colors">旅程を確認する</button>
+            <input type="date" id="startDate" class="w-full h-14 px-4 rounded-full text-gray-900 font-bold text-center shadow-2xl outline-none border-none m-0 box-border block">
+            <button onclick="showSchedule()" class="w-full h-14 bg-white text-black font-bold rounded-full shadow-2xl active:scale-95 tracking-widest text-sm hover:bg-gray-100 transition-colors m-0 box-border block border-none">旅程を確認する</button>
         </div>
     </div>
 
@@ -127,7 +143,9 @@
                         <p class="text-sm text-gray-600">京都駅周辺で車をピックアップ。伊根へ。</p>
                     </div>
                     <div class="photo-drawer max-h-0 overflow-hidden transition-all duration-500 ease-in-out bg-gray-100 rounded-b-lg border-l-[6px] border-[#064e3b] shadow-inner opacity-0">
-                        <div class="p-4"><iframe src="https://maps.app.goo.gl/fZRpEwi9UaDG7YDL9" width="100%" height="300" style="border:0; border-radius: 8px;" allowfullscreen="" loading="lazy"></iframe></div>
+                        <div class="p-4">
+                            <iframe src="https://www.google.com/maps/embed?pb=!1m16!1m12!1m3!1d3268.690899061614!2d135.75625!3d34.985458!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!2m1!1z5Lqs6YO96aeF44CA44Os44Oz44K_44Kr44O8!5e0!3m2!1sja!2sjp!4v1700000000000!5m2!1sja!2sjp" width="100%" height="300" style="border:0; border-radius: 8px;" allowfullscreen="" loading="lazy"></iframe>
+                        </div>
                     </div>
 
                     <div class="schedule-card p-5 rounded-lg cursor-pointer hover:bg-gray-50" onclick="toggleDrawer(this)">
@@ -234,7 +252,7 @@
         </div>
 
         <div id="mapView" class="tab-content hidden w-full h-screen pt-20 px-0 overflow-hidden pb-20">
-            <iframe src="https://www.google.com/maps/d/edit?hl=ja&mid=1Gy40EOVGdzNLsQG31C5OmLSwKD87LTs&ll=35.69811968612466%2C135.27604415000002&z=13" width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
+            <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d52185.08741355415!2d135.250555!3d35.670605!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x5fff63f450058983%3A0xc54032d969248231!2z5Lqs6YO95bqc5LiO6YOg6YOh5LyK5qC555S6!5e0!3m2!1sja!2sjp!4v1700000000000!5m2!1sja!2sjp" width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
         </div>
 
         <div id="logView" class="tab-content hidden w-full h-screen pt-24 px-6 overflow-y-auto pb-40 text-gray-900">
@@ -272,18 +290,19 @@
         const audio = document.getElementById('bgm');
         let isManuallyPaused = false; 
 
-        // BGMバックグラウンド再生無効（サイトから離れたら停止）
+        // BGM制御：画面が見えなくなったら確実に停止
         document.addEventListener('visibilitychange', () => {
             if (document.hidden) {
                 audio.pause();
             } else {
+                // 戻ってきたとき、ユーザーが手動停止していなければ再開
                 if (!audio.muted && !isManuallyPaused) {
                     audio.play().catch(e => console.log(e));
                 }
             }
         });
 
-        // 1. ロゴ画面から日付選択へ (ゆっくりフェードイン)
+        // 1. ロゴ画面から日付選択へ
         function goToTop() {
             audio.play().catch(e => console.log("Audio Play Failed:", e));
             document.getElementById('logoScreen').classList.add('opacity-0');
@@ -291,9 +310,8 @@
                 document.getElementById('logoScreen').classList.add('hidden');
                 const splash = document.getElementById('splash');
                 splash.classList.remove('hidden');
-                // 少し遅延させてopacityを1にすることでtransitionを効かせる
                 setTimeout(() => { splash.classList.remove('opacity-0'); }, 50);
-            }, 1000);
+            }, 700); // 0.7秒で切り替え
         }
 
         // 2. 日付選択からメインスケジュールへ
@@ -310,10 +328,10 @@
                     document.getElementById('app').classList.remove('opacity-0'); 
                     window.scrollTo(0, 0); 
                 }, 50); 
-            }, 2000); // splashがゆっくり消えるのを待つ
+            }, 1000); 
         }
 
-        // 3. ミュート切り替え (アイコンのみ操作)
+        // 3. ミュート切り替え
         function toggleMute() {
             const btn = document.getElementById('muteBtn');
             if (audio.muted) { 
